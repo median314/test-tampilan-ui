@@ -2,12 +2,24 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import {BrowserRouter} from 'react-router-dom'
+import {Box, ChakraProvider} from '@chakra-ui/react'
 import reportWebVitals from './reportWebVitals';
+import AppNavbar from './AppComponents/AppNavbar';
+import AppFooter from './AppComponents/AppFooter';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <ChakraProvider>
+        <AppNavbar />
+        <Box>
+          <App />
+        </Box>
+       <AppFooter />
+      </ChakraProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );
 
