@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Divider,
   Flex,
   Heading,
@@ -17,6 +18,9 @@ import { FiMail, FiPhone, FiTwitter } from "react-icons/fi";
 import AppFooter from "../Components/AppFooter";
 
 const HomePage = () => {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+
   const moreStories = [
     {
       id: 1,
@@ -70,81 +74,100 @@ const HomePage = () => {
   return (
     <Box>
       {/* <AppNavbar /> */}
-      <Box mt={75}>
+      <Stack alignItems={"center"} justifyContent="center" mt={75}>
         <Box>
-          <Box p={7}>
-            <Text align={"center"} fontSize={14}>
+          <Box p={[3, 5, 7]}>
+            <Text align={"center"} fontSize={[10, 14, 18]}>
               Have a question? We can help
             </Text>
           </Box>
 
           <Box pos={"relative"}>
             <Image
-              w={"fit-content"}
+              w={"100%"}
               src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0214_hp_w_img0_text.jpg"
             />
-            <Box pos={"absolute"} right={0} bottom={0} w={"50%"} h={200}>
+            <Box pos={"absolute"} right={0} bottom={"10%"} w={"50%"}>
               <Box align={"center"} color={"white"} pt={"5"}>
-                <Text>The Spring 2023</Text>
-                <Text fontWeight={"bold"} fontSize={35}>
+                <Text fontSize={[10, 14, 16]}>The Spring 2023</Text>
+                <Text fontWeight={"bold"} fontSize={[14, 27, 35]}>
                   Lookbook Is Here
                 </Text>
                 <Text>
                   <a href="#">Shop The Look</a>
                 </Text>
-                <Box w={20} h={1} bg={"white"} borderRadius={"md"} mt={1} />
+                <Box w={"20%"} h={1} bg={"white"} borderRadius={"md"} mt={1} />
               </Box>
             </Box>
           </Box>
         </Box>
 
-        <Box mx={40} my={10}>
+        <Stack alignItems={"center"} justifyContent="center" w={"80%"}>
           <SimpleGrid columns={[1, null, 2]} spacing={"none"}>
-            <Box pos={"relative"} border={"1px"}>
-              <Image src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0214_hp_w_img1.jpg" />
+            <Box pos={"relative"}>
+              <Image
+                w="100%"
+                src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0214_hp_w_img1.jpg"
+              />
               <Box
                 pos={"absolute"}
                 bottom={"30%"}
                 left={"20%"}
                 w={"60%"}
-                border={"1px"}
+                // border={"1px"}
                 alignItems={"center"}
               >
                 <Box align={"center"} color={"white"}>
-                  <Text>Pant spotlight</Text>
-                  <Text fontWeight={"bold"} fontSize={35}>
+                  <Text fontSize={[12, 15, 18]}>Pant spotlight</Text>
+                  <Text fontWeight={"bold"} fontSize={[12, 20, 25]}>
                     Introducing the Essential pant
                   </Text>
-                  <Text>
-                    <a href="#">Shop all pants</a>
-                  </Text>
-                  <Box w={20} h={1} bg={"white"} borderRadius={"md"} mt={1} />
+                  <Text fontSize={[5, 10, 16]}>Shop all pants</Text>
+                  <Box
+                    w={"20%"}
+                    h={1}
+                    bg={"white"}
+                    borderRadius={"md"}
+                    mt={1}
+                  />
                 </Box>
               </Box>
             </Box>
-            <Box pos={"relative"} border={"1px"}>
-              <Image src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0214_hp_w_img2.jpg" />
+            <Box pos={"relative"}>
+              <Image
+                w="100%"
+                src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0214_hp_w_img2.jpg"
+              />
               <Box
                 pos={"absolute"}
                 bottom={"30%"}
                 left={"20%"}
                 w={"60%"}
-                border={"1px"}
+                // border={"1px"}
                 alignItems={"center"}
               >
                 <Box align={"center"} color={"white"}>
-                  <Text fontWeight={"bold"} fontSize={35}>
+                  <Text fontWeight={"bold"} fontSize={[15, 20, 35]}>
                     Have Forever Cashmere
                   </Text>
                   <Text>
                     <a href="#">Shop the new palette</a>
                   </Text>
-                  <Box w={20} h={1} bg={"white"} borderRadius={"md"} mt={1} />
+                  <Box
+                    w={"20%"}
+                    h={1}
+                    bg={"white"}
+                    borderRadius={"md"}
+                    mt={1}
+                  />
                 </Box>
               </Box>
             </Box>
-            <Box pos={"relative"} border={"1px"}>
-              <Image src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0214_hp_w_img3.jpg" />
+            <Box pos={"relative"}>
+              <Image
+                w="100%"
+                src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0214_hp_w_img3.jpg"
+              />
               <Box
                 pos={"absolute"}
                 bottom={"2%"}
@@ -154,18 +177,27 @@ const HomePage = () => {
                 alignItems={"center"}
               >
                 <Box align={"center"} color={"black"}>
-                  <Text fontWeight={"bold"} fontSize={35}>
+                  <Text fontWeight={"bold"} fontSize={[15, 20, 35]}>
                     The Winona Loafer Lineup
                   </Text>
                   <Text>
                     <a href="#">Shop shoes</a>
                   </Text>
-                  <Box w={20} h={1} bg={"black"} borderRadius={"md"} mt={1} />
+                  <Box
+                    w={"20%"}
+                    h={1}
+                    bg={"black"}
+                    borderRadius={"md"}
+                    mt={1}
+                  />
                 </Box>
               </Box>
             </Box>
-            <Box pos={"relative"} border={"1px"}>
-              <Image src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0131_hp_w_img4.jpg" />
+            <Box pos={"relative"}>
+              <Image
+                w="100%"
+                src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0131_hp_w_img4.jpg"
+              />
               <Box
                 pos={"absolute"}
                 bottom={"2%"}
@@ -175,18 +207,27 @@ const HomePage = () => {
                 alignItems={"center"}
               >
                 <Box align={"center"} color={"white"}>
-                  <Text fontWeight={"bold"} fontSize={35}>
+                  <Text fontWeight={"bold"} fontSize={[15, 20, 35]}>
                     Swim time!
                   </Text>
                   <Text>
                     <a href="#">Shop the latest</a>
                   </Text>
-                  <Box w={20} h={1} bg={"white"} borderRadius={"md"} mt={1} />
+                  <Box
+                    w={"20%"}
+                    h={1}
+                    bg={"white"}
+                    borderRadius={"md"}
+                    mt={1}
+                  />
                 </Box>
               </Box>
             </Box>
-            <Box pos={"relative"} border={"1px"}>
-              <Image src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0214_hp_w_img5.jpg" />
+            <Box pos={"relative"}>
+              <Image
+                w="100%"
+                src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0214_hp_w_img5.jpg"
+              />
               <Box
                 pos={"absolute"}
                 bottom={"5%"}
@@ -196,18 +237,27 @@ const HomePage = () => {
                 alignItems={"center"}
               >
                 <Box align={"center"} color={"white"}>
-                  <Text fontWeight={"bold"} fontSize={35}>
+                  <Text fontWeight={"bold"} fontSize={[15, 20, 35]}>
                     The Work Remix
                   </Text>
                   <Text>
                     <a href="#">Shop new arrivals</a>
                   </Text>
-                  <Box w={20} h={1} bg={"white"} borderRadius={"md"} mt={1} />
+                  <Box
+                    w={"20%"}
+                    h={1}
+                    bg={"white"}
+                    borderRadius={"md"}
+                    mt={1}
+                  />
                 </Box>
               </Box>
             </Box>
-            <Box pos={"relative"} border={"1px"}>
-              <Image src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0214_hp_w_img6_new.jpg" />
+            <Box pos={"relative"}>
+              <Image
+                w="100%"
+                src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0214_hp_w_img6_new.jpg"
+              />
               <Box
                 pos={"absolute"}
                 bottom={"5%"}
@@ -217,36 +267,58 @@ const HomePage = () => {
                 alignItems={"center"}
               >
                 <Box align={"center"} color={"white"}>
-                  <Text fontWeight={"bold"} fontSize={35}>
+                  <Text fontWeight={"bold"} fontSize={[15, 20, 35]}>
                     New covetable classics
                   </Text>
                   <Text>
                     <a href="#">Shop this month collection</a>
                   </Text>
-                  <Box w={20} h={1} bg={"white"} borderRadius={"md"} mt={1} />
+                  <Box
+                    w={"20%"}
+                    h={1}
+                    bg={"white"}
+                    borderRadius={"md"}
+                    mt={1}
+                  />
                 </Box>
               </Box>
             </Box>
           </SimpleGrid>
-        </Box>
+        </Stack>
 
-        <HStack justifyContent={"center"} gap={5} py={4} mb={5}>
-          <Text fontSize={30} mx={5}>
-            Shop New Arrivals
-          </Text>
-          <Text border={"1px"} p={2} w={145} align={"center"}>
-            Shop Women
-          </Text>
-          <Text border={"1px"} p={2} w={145} align={"center"}>
-            Shop Men
-          </Text>
-          <Text border={"1px"} p={2} w={145} align={"center"}>
-            Shop Girls
-          </Text>
-          <Text border={"1px"} p={2} w={145} align={"center"}>
-            Shop Boys
-          </Text>
-        </HStack>
+        <Box align={"center"} w={"100%"}>
+          <HStack gap={5} py={4} mb={5} w={"80%"}>
+            <Text fontSize={[14, null, 25]} mx={4} w={"20%"}>
+              Shop New Arrivals
+            </Text>
+            <Button
+              border={"1px"}
+              borderRadius={0}
+              bg={"transparent"}
+              p={"3%"}
+              w={"20%"}
+              align={"center"}
+              fontSize={["sm", 14, 16]}
+            >
+              Shop Women
+            </Button>
+            <Text
+              border={"1px"}
+              fontSize={[10, 14, 16]}
+              p={2}
+              w={"20%"}
+              align={"center"}
+            >
+              Shop Men
+            </Text>
+            <Text border={"1px"} p={2} w={"20%"} align={"center"}>
+              Shop Girls
+            </Text>
+            <Text border={"1px"} p={2} w={"20%"} align={"center"}>
+              Shop Boys
+            </Text>
+          </HStack>
+        </Box>
 
         <Box bg={"#f8f4ef"}>
           <Box px={40} py={"10em"}>
@@ -269,7 +341,13 @@ const HomePage = () => {
               ))}
             </SimpleGrid>
 
-            <Box mt={20} w={"full"} h={1} align={"Center"} bgColor={"black"} />
+            <Box
+              mt={"20%"}
+              w={"full"}
+              h={1}
+              align={"Center"}
+              bgColor={"black"}
+            />
             <HStack>
               <SimpleGrid columns={[1, null, 3]} w={"50%"} spacing={3}>
                 <Image src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0124_hp_w_img11b.jpg" />
@@ -449,7 +527,7 @@ const HomePage = () => {
             </Box>
           </HStack>
         </Box>
-      </Box>
+      </Stack>
       {/* <AppFooter /> */}
     </Box>
   );

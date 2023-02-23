@@ -13,7 +13,7 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <ChakraProvider>
-        <AppNavbar />
+        {/* <AppNavbar /> */}
         <Box>
           <App />
         </Box>

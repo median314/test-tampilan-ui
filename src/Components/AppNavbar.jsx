@@ -62,16 +62,21 @@ const AppNavbar = () => {
       //   maxH={75}
       zIndex={1}
     >
-      <HStack justifyContent={"space-between"}>
+      <HStack justifyContent={["center", null, "space-between"]}>
         <HStack spacing={10}>
           <Link to="/">
             <Image
               w={100}
+              mx={10}
               src="https://cdn.shopify.com/s/files/1/0608/6724/8340/files/Logo_klamby_baru_banget_140x@2x.png?v=1643345083"
             />
           </Link>
 
-          <HStack spacing={4}>
+          <HStack
+            spacing={4}
+            display={["none", null, "contents"]}
+            fontSize={[null, 10, 15]}
+          >
             <a href="#">New</a>
             <a href="12">Women</a>
             <a href="#">Men</a>

@@ -69,7 +69,7 @@ const ProductPage = () => {
                 p={2}
                 _hover={{ bg: "white", boxShadow: "md" }}
               >
-                <Image h={450} src={x.img} _hover={{ src: x.imgHover }} />
+                <Image h={450} src={x.img} />
                 <Text py={3}>{x.name}</Text>
                 <Text fontWeight={"semibold"}>
                   IDR{" "}
