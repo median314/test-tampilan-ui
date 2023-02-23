@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Checkbox,
+  Divider,
   HStack,
   Image,
   Input,
@@ -18,31 +19,51 @@ import {
   Stack,
   Text,
   useDisclosure,
+  IconButton,
+  CloseButton,
+  Flex,
+  Icon,
+  useColorModeValue,
+  Link,
+  Drawer,
+  DrawerContent,
+  BoxProps,
+  FlexProps,
+  DrawerOverlay,
+  DrawerCloseButton,
+  DrawerBody,
 } from "@chakra-ui/react";
 import { FiSearch } from "react-icons/fi";
 import { SlHandbag } from "react-icons/sl";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  AiOutlineEye,
+  AiOutlineEyeInvisible,
+  AiOutlineRight,
+} from "react-icons/ai";
+import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { HamburgerIcon } from "@chakra-ui/icons";
+import { FaSearch } from "react-icons/fa";
 
 const AppNavbar = () => {
   const [isMobile, setIsMobile] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
   const [show, setShow] = useState(false);
   const handleShowPassword = () => setShow(!show);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const btnRef = useRef();
 
   const handleResize = () => {
     setIsMobile(window.innerWidth < 768);
   };
 
+  const width = window.innerWidth;
 
   useState(() => {
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     handleResize();
   }, []);
-
-
 
   const {
     isOpen: isLoginOpen,
@@ -53,6 +74,11 @@ const AppNavbar = () => {
     isOpen: isSignupOpen,
     onOpen: onSignupOpen,
     onClose: onSignupClose,
+  } = useDisclosure();
+  const {
+    isOpen: isNavOpen,
+    onOpen: onNavOpen,
+    onClose: onNavClose,
   } = useDisclosure();
 
   const signupModal = () => {
@@ -67,20 +93,36 @@ const AppNavbar = () => {
 
   return (
     <Box
-      px={"5em"}
+      px={5}
       py={3}
       bg={"white"}
       borderBottom={"1px"}
       borderColor={"gray.300"}
       position={"fixed"}
-      w={"full"}
+      w={width}
       top={0}
       zIndex={1}
     >
       {isMobile ? (
-        <Stack>
-          <Text>ini klo mobile</Text>
-        </Stack>
+        <>
+          <HStack justify={"space-between"}>
+            <HStack>
+              <Box onClick={onNavOpen}>
+                <HamburgerIcon />
+              </Box>
+              <FiSearch size={20} color="gray.300" />
+            </HStack>
+            <Link to="/">
+              <Image
+                w={100}
+                src="https://cdn.shopify.com/s/files/1/0608/6724/8340/files/Logo_klamby_baru_banget_140x@2x.png?v=1643345083"
+              />
+            </Link>
+            <Stack onClick={() => navigate("/cart")} cursor="pointer">
+              <SlHandbag size={20} />
+            </Stack>
+          </HStack>
+        </>
       ) : (
         <HStack justifyContent={"space-between"}>
           <HStack spacing={10}>
@@ -91,45 +133,62 @@ const AppNavbar = () => {
               />
             </Link>
 
-            <HStack spacing={5} alignItems='center' justifyContent={'center'}>
-              <Stack onClick={() => navigate('/product')} cursor='pointer'>
-                <Text fontSize={'sm'} color='gray.500'>New</Text>
+            <HStack spacing={5} alignItems="center" justifyContent={"center"}>
+              <Stack onClick={() => navigate("/product")} cursor="pointer">
+                <Text fontSize={"sm"} color="gray.500">
+                  New
+                </Text>
               </Stack>
 
-              <Stack onClick={() => navigate('/product')} cursor='pointer'>
-                <Text fontSize={'sm'} color='gray.500'>Women</Text>
+              <Stack onClick={() => navigate("/product")} cursor="pointer">
+                <Text fontSize={"sm"} color="gray.500">
+                  Women
+                </Text>
               </Stack>
 
-              <Stack onClick={() => navigate('/product')} cursor='pointer'>
-                <Text fontSize={'sm'} color='gray.500'>Men</Text>
+              <Stack onClick={() => navigate("/product")} cursor="pointer">
+                <Text fontSize={"sm"} color="gray.500">
+                  Men
+                </Text>
               </Stack>
 
-              <Stack onClick={() => navigate('/product')} cursor='pointer'>
-                <Text fontSize={'sm'} color='gray.500'>Kids</Text>
+              <Stack onClick={() => navigate("/product")} cursor="pointer">
+                <Text fontSize={"sm"} color="gray.500">
+                  Kids
+                </Text>
               </Stack>
 
-              <Stack onClick={() => navigate('/product')} cursor='pointer'>
-                <Text fontSize={'sm'} color='gray.500'>Swim</Text>
+              <Stack onClick={() => navigate("/product")} cursor="pointer">
+                <Text fontSize={"sm"} color="gray.500">
+                  Swim
+                </Text>
               </Stack>
 
-              <Stack onClick={() => navigate('/product')} cursor='pointer'>
-                <Text fontSize={'sm'} color='gray.500'>Cashmare</Text>
+              <Stack onClick={() => navigate("/product")} cursor="pointer">
+                <Text fontSize={"sm"} color="gray.500">
+                  Cashmare
+                </Text>
               </Stack>
 
-              <Stack onClick={() => navigate('/product')} cursor='pointer'>
-                <Text fontSize={'sm'} color='gray.500'>Home</Text>
+              <Stack onClick={() => navigate("/product")} cursor="pointer">
+                <Text fontSize={"sm"} color="gray.500">
+                  Home
+                </Text>
               </Stack>
 
-              <Stack onClick={() => navigate('/product')} cursor='pointer'>
-                <Text fontSize={'sm'} color='gray.500'>Stories</Text>
+              <Stack onClick={() => navigate("/product")} cursor="pointer">
+                <Text fontSize={"sm"} color="gray.500">
+                  Stories
+                </Text>
               </Stack>
 
-              <Stack onClick={() => navigate('/product')} cursor='pointer'>
-                <Text fontSize={'sm'} color='gray.500'>Sales</Text>
+              <Stack onClick={() => navigate("/product")} cursor="pointer">
+                <Text fontSize={"sm"} color="gray.500">
+                  Sales
+                </Text>
               </Stack>
-
             </HStack>
-          </HStack >
+          </HStack>
 
           <HStack spacing={8}>
             <Box>
@@ -149,11 +208,11 @@ const AppNavbar = () => {
             >
               Sign In
             </Text>
-            <Stack onClick={() => navigate('/cart')} cursor='pointer'>
+            <Stack onClick={() => navigate("/cart")} cursor="pointer">
               <SlHandbag size={20} />
             </Stack>
           </HStack>
-        </HStack >
+        </HStack>
       )}
 
       <Modal isOpen={isLoginOpen} onClose={onLoginClose} size={"xs"}>
@@ -277,7 +336,93 @@ const AppNavbar = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </Box >
+
+      <Drawer
+        isOpen={isNavOpen}
+        placement={"left"}
+        onClose={onNavClose}
+        finalFocusRef={btnRef}
+      >
+        {/* <DrawerOverlay /> */}
+        <DrawerContent mt={65}>
+          <DrawerBody>
+            <Stack py={3} px={2}>
+              <Box bg={"gray.400"} align={"center"}>
+                <Button colorScheme={"green"} m={2} borderRadius={0} w={"90%"}>
+                  SIGN IN
+                </Button>
+              </Box>
+              <Stack bg={"white"} spacing={5}>
+                <HStack justify={"space-between"}>
+                  <Text>New</Text>
+                  <Text>
+                    <AiOutlineRight />
+                  </Text>
+                </HStack>
+                <HStack justify={"space-between"}>
+                  <Text>Women</Text>
+                  <Text>
+                    <AiOutlineRight />
+                  </Text>
+                </HStack>
+                <HStack justify={"space-between"}>
+                  <Text>Men</Text>
+                  <Text>
+                    <AiOutlineRight />
+                  </Text>
+                </HStack>
+                <HStack justify={"space-between"}>
+                  <Text>Girls</Text>
+                  <Text>
+                    <AiOutlineRight />
+                  </Text>
+                </HStack>
+                <HStack justify={"space-between"}>
+                  <Text>Boys</Text>
+                  <Text>
+                    <AiOutlineRight />
+                  </Text>
+                </HStack>
+                <HStack justify={"space-between"}>
+                  <Text>Accessories</Text>
+                  <Text>
+                    <AiOutlineRight />
+                  </Text>
+                </HStack>
+                <HStack justify={"space-between"}>
+                  <Text>Cashmere</Text>
+                  <Text>
+                    <AiOutlineRight />
+                  </Text>
+                </HStack>
+                <HStack justify={"space-between"}>
+                  <Text>Home</Text>
+                  <Text>
+                    <AiOutlineRight />
+                  </Text>
+                </HStack>
+                <HStack justify={"space-between"}>
+                  <Text>Stories</Text>
+                  <Text>
+                    <AiOutlineRight />
+                  </Text>
+                </HStack>
+                <HStack justify={"space-between"}>
+                  <Text>Sale</Text>
+                  <Text>
+                    <AiOutlineRight />
+                  </Text>
+                </HStack>
+              </Stack>
+              <Stack py={5} bg={"white"}>
+                <Text>Have a question? We can help.</Text>
+                <Text as={"u"}>Details</Text>
+              </Stack>
+            </Stack>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+    </Box>
   );
 };
 

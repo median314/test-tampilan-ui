@@ -62,3 +62,5 @@ export const womenClothes = [
     price: 3146533,
   },
 ];
+
+

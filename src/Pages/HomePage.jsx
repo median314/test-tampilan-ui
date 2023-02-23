@@ -16,6 +16,8 @@ import { MdOutlineFavorite, MdOutlineFavoriteBorder } from "react-icons/md";
 import AppHeader from "../Components/AppHeader";
 import { FiMail, FiPhone, FiTwitter } from "react-icons/fi";
 import AppFooter from "../Components/AppFooter";
+import { moreYouNeed } from "../dataArray.jsx/moreYouNeed";
+import { youAlsoLove } from "../dataArray.jsx/youAlsoLove";
 
 const HomePage = () => {
   const width = window.innerWidth;
@@ -72,12 +74,12 @@ const HomePage = () => {
   ];
 
   return (
-    <Box>
+    <Stack>
       {/* <AppNavbar /> */}
       <Stack alignItems={"center"} justifyContent="center" mt={75}>
-        <Box>
-          <Box p={7} >
-            <Text align={"center"} color='gray.600' fontSize={14}>
+        <Stack alignItems={"center"} justifyContent="center">
+          <Box p={[3, null, 7]}>
+            <Text align={"center"} color="gray.600" fontSize={14}>
               Have a question? We can help
             </Text>
           </Box>
@@ -100,9 +102,14 @@ const HomePage = () => {
               </Box>
             </Box>
           </Box>
-        </Box>
+        </Stack>
 
-        <Stack alignItems={"center"} justifyContent="center" w={"80%"}>
+        <Stack
+          alignItems={"center"}
+          justifyContent="center"
+          w={["100%", null, "80%"]}
+          py={[null, null, 10]}
+        >
           <SimpleGrid columns={[1, null, 2]} spacing={"none"}>
             <Box pos={"relative"}>
               <Image
@@ -286,42 +293,69 @@ const HomePage = () => {
           </SimpleGrid>
         </Stack>
 
-        <Box align={"center"} w={"100%"}>
-          <HStack gap={5} py={4} mb={5} w={"80%"}>
-            <Text fontSize={[14, null, 25]} mx={4} w={"20%"}>
+        <Stack align={"center"} w={"100%"}>
+          <Stack direction={["column", null, "row"]}>
+            <Text mx={4} py={2} align={"center"} fontWeight={"semibold"}>
               Shop New Arrivals
             </Text>
-            <Button
-              border={"1px"}
-              borderRadius={0}
-              bg={"transparent"}
-              p={"3%"}
-              w={"20%"}
-              align={"center"}
-              fontSize={["sm", 14, 16]}
+            <SimpleGrid
+              spacing={5}
+              columns={[2, null, 4]}
+              // py={4}
+              pb={5}
+              w={[300, null, null]}
+              // border={"1px"}
             >
-              Shop Women
-            </Button>
-            <Text
-              border={"1px"}
-              fontSize={[10, 14, 16]}
-              p={2}
-              w={"20%"}
-              align={"center"}
-            >
-              Shop Men
-            </Text>
-            <Text border={"1px"} p={2} w={"20%"} align={"center"}>
-              Shop Girls
-            </Text>
-            <Text border={"1px"} p={2} w={"20%"} align={"center"}>
-              Shop Boys
-            </Text>
-          </HStack>
-        </Box>
+              <Button
+                border={"1px"}
+                borderRadius={0}
+                bg={"transparent"}
+                p={"3%"}
+                // w={"20%"}
+                align={"center"}
+                fontSize={["sm", 14, 16]}
+              >
+                Shop Women
+              </Button>
+              <Button
+                border={"1px"}
+                borderRadius={0}
+                bg={"transparent"}
+                p={"3%"}
+                // w={"20%"}
+                align={"center"}
+                fontSize={["sm", 14, 16]}
+              >
+                Shop Men
+              </Button>
+              <Button
+                border={"1px"}
+                borderRadius={0}
+                bg={"transparent"}
+                p={"3%"}
+                // w={"20%"}
+                align={"center"}
+                fontSize={["sm", 14, 16]}
+              >
+                Shop Girls
+              </Button>
+              <Button
+                border={"1px"}
+                borderRadius={0}
+                bg={"transparent"}
+                p={"3%"}
+                // w={"20%"}
+                align={"center"}
+                fontSize={["sm", 14, 16]}
+              >
+                Shop Boys
+              </Button>
+            </SimpleGrid>
+          </Stack>
+        </Stack>
 
-        <Box bg={"#f8f4ef"}>
-          <Box px={40} py={"10em"}>
+        <Stack bg={"#f8f4ef"}>
+          <Stack px={[10, null, 40]} py={10}>
             <Heading size={"md"} fontSize={35} mb={8}>
               More Stories
             </Heading>
@@ -330,12 +364,22 @@ const HomePage = () => {
                 <Box key={i}>
                   <Image src={x.img} />
                   <Box>
-                    <Text fontSize={20} mb={5}>
+                    <Text
+                      fontSize={20}
+                      mb={[2, null, 5]}
+                      align={["center", null, null]}
+                    >
                       {x.name}
                     </Text>
-                    <Text as={"u"} fontWeight={"bold"}>
-                      <a href="45">{x.link}</a>
-                    </Text>
+                    <Box align={"center"}>
+                      <Text
+                        as={"u"}
+                        fontWeight={"bold"}
+                        align={["center", null, null]}
+                      >
+                        {x.link}
+                      </Text>
+                    </Box>
                   </Box>
                 </Box>
               ))}
@@ -348,8 +392,15 @@ const HomePage = () => {
               align={"Center"}
               bgColor={"black"}
             />
-            <HStack>
-              <SimpleGrid columns={[1, null, 3]} w={"50%"} spacing={3}>
+            <Stack
+              direction={["column-reverse", null, "row"]}
+              alignItems={"center"}
+            >
+              <SimpleGrid
+                columns={[1, null, 3]}
+                w={["80%", null, "50%"]}
+                spacing={3}
+              >
                 <Image src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0124_hp_w_img11b.jpg" />
                 <Image src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0124_hp_w_img12b.jpg" />
                 <Image src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0124_hp_w_img13b.jpg" />
@@ -366,113 +417,37 @@ const HomePage = () => {
                   Meet our creative community
                 </Text>
               </Box>
-            </HStack>
-          </Box>
-        </Box>
+            </Stack>
+          </Stack>
+        </Stack>
 
-        <Box p={20}>
+        <Stack p={[4, null, 20]}>
           <Text align={"center"} mb={10} fontSize={30}>
             You'll Also Love
           </Text>
-          <HStack>
-            <Box pos={"relative"}>
-              <Image src="https://www.jcrew.com/s7-img-facade/BO614_SR0696?wid=376" />
-              <Box
-                pos={"absolute"}
-                bottom={"80%"}
-                left={"60%"}
-                w={"60%"}
-                //   border={"1px"}
-                alignItems={"center"}
-              >
-                <Box align={"center"}>
-                  <MdOutlineFavorite size={30} />
-                  {/* <Box w={20} h={1} bg={"white"} borderRadius={"md"} mt={1} /> */}
-                </Box>
-              </Box>
-            </Box>
-            <Box pos={"relative"}>
-              <Image src="https://www.jcrew.com/s7-img-facade/BF793_WO8694?wid=376" />
-              <Box
-                pos={"absolute"}
-                bottom={"80%"}
-                left={"60%"}
-                w={"60%"}
-                //   border={"1px"}
-                alignItems={"center"}
-              >
-                <Box align={"center"}>
-                  <MdOutlineFavorite size={30} />
-                  {/* <Box w={20} h={1} bg={"white"} borderRadius={"md"} mt={1} /> */}
-                </Box>
-              </Box>
-            </Box>
-            <Box pos={"relative"}>
-              <Image src="https://www.jcrew.com/s7-img-facade/AR522_EB7521?wid=376" />
-              <Box
-                pos={"absolute"}
-                bottom={"80%"}
-                left={"60%"}
-                w={"60%"}
-                //   border={"1px"}
-                alignItems={"center"}
-              >
-                <Box align={"center"}>
-                  <MdOutlineFavorite size={30} />
-                  {/* <Box w={20} h={1} bg={"white"} borderRadius={"md"} mt={1} /> */}
-                </Box>
-              </Box>
-            </Box>
-            <Box pos={"relative"}>
-              <Image src="https://www.jcrew.com/s7-img-facade/AN140_BL8818?wid=376" />
-              <Box
-                pos={"absolute"}
-                bottom={"80%"}
-                left={"60%"}
-                w={"60%"}
-                //   border={"1px"}
-                alignItems={"center"}
-              >
-                <Box align={"center"}>
-                  <MdOutlineFavorite size={30} />
-                  {/* <Box w={20} h={1} bg={"white"} borderRadius={"md"} mt={1} /> */}
-                </Box>
-              </Box>
-            </Box>
-            <Box pos={"relative"}>
-              <Image src="https://www.jcrew.com/s7-img-facade/AW234_EE0530?wid=376" />
-              <Box
-                pos={"absolute"}
-                bottom={"80%"}
-                left={"60%"}
-                w={"60%"}
-                //   border={"1px"}
-                alignItems={"center"}
-              >
-                <Box align={"center"}>
-                  <MdOutlineFavorite size={30} />
-                  {/* <Box w={20} h={1} bg={"white"} borderRadius={"md"} mt={1} /> */}
-                </Box>
-              </Box>
-            </Box>
-            <Box pos={"relative"}>
-              <Image src="https://www.jcrew.com/s7-img-facade/BA231_EE0759?wid=376" />
-              <Box
-                pos={"absolute"}
-                bottom={"80%"}
-                left={"60%"}
-                w={"60%"}
-                //   border={"1px"}
-                alignItems={"center"}
-              >
-                <Box align={"center"}>
-                  <MdOutlineFavorite size={30} />
-                  {/* <Box w={20} h={1} bg={"white"} borderRadius={"md"} mt={1} /> */}
-                </Box>
-              </Box>
-            </Box>
-          </HStack>
-        </Box>
+          <Flex gap={2} overflowX={"auto"} flexWrap="nowrap">
+            <HStack pos={"relative"} overflowX={"auto"}>
+              {youAlsoLove.map((x, i) => (
+                <>
+                  <Image w={"100%"} src={x.img} />
+                  <Box
+                    pos={"absolute"}
+                    bottom={"80%"}
+                    left={"60%"}
+                    w={"60%"}
+                    //   border={"1px"}
+                    alignItems={"center"}
+                  >
+                    <Box align={"center"}>
+                      <MdOutlineFavorite size={"20%"} />
+                      {/* <Box w={20} h={1} bg={"white"} borderRadius={"md"} mt={1} /> */}
+                    </Box>
+                  </Box>
+                </>
+              ))}
+            </HStack>
+          </Flex>
+        </Stack>
 
         <Box px={20} py={10}>
           <Box align={"center"} mb={10} fontSize={20}>
@@ -482,54 +457,48 @@ const HomePage = () => {
             </Text>
           </Box>
           <HStack spacing={10}>
-            {instagramProduct.map((x) => (
-              <Box>
-                <Image src={x.img} />
-              </Box>
-            ))}
+            <Flex flexWrap={"nowrap"} overflowX={"auto"} gap={2}>
+              {instagramProduct.map((x) => (
+                <>
+                  <Image src={x.img} />
+                </>
+              ))}
+            </Flex>
           </HStack>
         </Box>
 
-        <Box p={20}>
-          <Heading align={"center"} mb={4}>
-            More you need to see
-          </Heading>
-          <HStack spacing={5}>
-            <Box>
-              <Image src="https://www.jcrew.com/s7-img-facade/BO175_SR0972_m?wid=416" />
-              <Text py={2}>Shop Women's Sweaters</Text>
-              <Box w={75} h={0.5} bgColor={"black"} />
-            </Box>
-            <Box>
-              <Image src="https://www.jcrew.com/s7-img-facade/BO175_SR0972_m?wid=416" />
-              <Text py={2}>Shop Women's Sweaters</Text>
-              <Box w={75} h={0.5} borderRadius={"md"} bgColor={"black"} />
-            </Box>
-            <Box>
-              <Image src="https://www.jcrew.com/s7-img-facade/BO175_SR0972_m?wid=416" />
-              <Text py={2}>Shop Women's Sweaters</Text>
-              <Box w={75} h={0.5} borderRadius={"md"} bgColor={"black"} />
-            </Box>
-            <Box>
-              <Image src="https://www.jcrew.com/s7-img-facade/BO175_SR0972_m?wid=416" />
-              <Text py={2}>Shop Women's Sweaters</Text>
-              <Box w={75} h={0.5} borderRadius={"md"} bgColor={"black"} />
-            </Box>
-            <Box>
-              <Image src="https://www.jcrew.com/s7-img-facade/BO175_SR0972_m?wid=416" />
-              <Text py={2}>Shop Women's Sweaters</Text>
-              <Box w={75} h={0.5} borderRadius={"md"} bgColor={"black"} />
-            </Box>
-            <Box>
-              <Image src="https://www.jcrew.com/s7-img-facade/BO175_SR0972_m?wid=416" />
-              <Text py={2}>Shop Women's Sweaters</Text>
-              <Box w={75} h={0.5} borderRadius={"md"} bgColor={"black"} />
-            </Box>
-          </HStack>
-        </Box>
+        <Heading align={"center"} mb={4}>
+          More you need to see
+        </Heading>
+
+        <Stack
+          // alignItems={"center"}
+          justifyContent="center"
+          w={"100%"}
+          h={"100%"}
+          mx={"3em"}
+          overflow={["auto"]}
+          // px={[4, null, 20]}
+        >
+          <Stack spacing={5} px={3} py={4}>
+            <Flex flexDir={"column"} flexWrap={"nowrap"} overflow={"auto"}>
+              <HStack>
+                {moreYouNeed.map((cloth, i) => (
+                  <>
+                    {/* <Flex flexDir={"column"}> */}
+                    <Image w={"100%"} src={cloth.img} />
+                    {/* <Text py={2}>{cloth.name}</Text> */}
+                    <Box w={"80%"} h={"1%"} bgColor={"black"} />
+                    {/* </Flex> */}
+                  </>
+                ))}
+              </HStack>
+            </Flex>
+          </Stack>
+        </Stack>
       </Stack>
       {/* <AppFooter /> */}
-    </Box>
+    </Stack>
   );
 };
 
