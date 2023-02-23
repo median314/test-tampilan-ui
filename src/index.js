@@ -7,6 +7,7 @@ import {Box, ChakraProvider} from '@chakra-ui/react'
 import reportWebVitals from './reportWebVitals';
 import AppNavbar from './Components/AppNavbar';
 import AppFooter from './Components/AppFooter';
+import AppNavbarResponsive from './Components/AppNavbarResponsive';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
