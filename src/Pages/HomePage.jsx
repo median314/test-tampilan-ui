@@ -73,7 +73,7 @@ const HomePage = () => {
       <Box mt={75}>
         <Box>
           <Box p={7}>
-            <Text align={"center"} fontSize={14}>
+            <Text align={"center"} color='gray.600' fontSize={14}>
               Have a question? We can help
             </Text>
           </Box>

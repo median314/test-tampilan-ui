@@ -67,7 +67,7 @@ const ProductPage = () => {
               <Box
                 pos={"relative"}
                 p={2}
-                _hover={{ bg: "white", boxShadow: "md" }}
+                _hover={{ bg: "white", boxShadow: "md", transform: "scale(1.05)" }}
               >
                 <Image h={450} src={x.img} _hover={{ src: x.imgHover }} />
                 <Text py={3}>{x.name}</Text>

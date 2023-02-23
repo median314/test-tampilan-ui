@@ -15,6 +15,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Stack,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -22,11 +23,13 @@ import { FiSearch } from "react-icons/fi";
 import { SlHandbag } from "react-icons/sl";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const AppNavbar = () => {
   const [show, setShow] = useState(false);
   const handleShowPassword = () => setShow(!show);
+
+  const navigate = useNavigate()
 
   const {
     isOpen: isLoginOpen,
@@ -71,16 +74,43 @@ const AppNavbar = () => {
             />
           </Link>
 
-          <HStack spacing={4}>
-            <a href="#">New</a>
-            <a href="12">Women</a>
-            <a href="#">Men</a>
-            <a href="#">Kids</a>
-            <a href="#">Swim</a>
-            <a href="#">Cashmere</a>
-            <a href="#">Home</a>
-            <a href="#">Stories</a>
-            <a href="#">Sales</a>
+          <HStack spacing={5} alignItems='center' justifyContent={'center'}>
+            <Stack onClick={() => navigate('/product')} cursor='pointer'>
+              <Text fontSize={'sm'} color='gray.500'>New</Text>
+            </Stack>
+
+            <Stack onClick={() => navigate('/product')} cursor='pointer'>
+              <Text fontSize={'sm'} color='gray.500'>Women</Text>
+            </Stack>
+
+            <Stack onClick={() => navigate('/product')} cursor='pointer'>
+              <Text fontSize={'sm'} color='gray.500'>Men</Text>
+            </Stack>
+
+            <Stack onClick={() => navigate('/product')} cursor='pointer'>
+              <Text fontSize={'sm'} color='gray.500'>Kids</Text>
+            </Stack>
+
+            <Stack onClick={() => navigate('/product')} cursor='pointer'>
+              <Text fontSize={'sm'} color='gray.500'>Swim</Text>
+            </Stack>
+
+            <Stack onClick={() => navigate('/product')} cursor='pointer'>
+              <Text fontSize={'sm'} color='gray.500'>Cashmare</Text>
+            </Stack>
+
+            <Stack onClick={() => navigate('/product')} cursor='pointer'>
+              <Text fontSize={'sm'} color='gray.500'>Home</Text>
+            </Stack>
+
+            <Stack onClick={() => navigate('/product')} cursor='pointer'>
+              <Text fontSize={'sm'} color='gray.500'>Stories</Text>
+            </Stack>
+
+            <Stack onClick={() => navigate('/product')} cursor='pointer'>
+              <Text fontSize={'sm'} color='gray.500'>Sales</Text>
+            </Stack>
+
           </HStack>
         </HStack>
 
@@ -102,9 +132,9 @@ const AppNavbar = () => {
           >
             Sign In
           </Text>
-          <Link to="/cart">
+          <Stack onClick={() => navigate('/cart')} cursor='pointer'>
             <SlHandbag size={20} />
-          </Link>
+          </Stack>
         </HStack>
       </HStack>
 
