@@ -5,8 +5,8 @@ import App from './App';
 import {BrowserRouter} from 'react-router-dom'
 import {Box, ChakraProvider} from '@chakra-ui/react'
 import reportWebVitals from './reportWebVitals';
-import AppNavbar from './AppComponents/AppNavbar';
-import AppFooter from './AppComponents/AppFooter';
+import AppNavbar from './Components/AppNavbar';
+import AppFooter from './Components/AppFooter';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

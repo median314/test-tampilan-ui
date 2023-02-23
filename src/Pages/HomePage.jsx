@@ -10,11 +10,11 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React from "react";
-import AppNavbar from "../AppComponents/AppNavbar";
+import AppNavbar from "../Components/AppNavbar";
 import { MdOutlineFavorite, MdOutlineFavoriteBorder } from "react-icons/md";
-import AppHeader from "../AppComponents/AppHeader";
+import AppHeader from "../Components/AppHeader";
 import { FiMail, FiPhone, FiTwitter } from "react-icons/fi";
-import AppFooter from "../AppComponents/AppFooter";
+import AppFooter from "../Components/AppFooter";
 
 const HomePage = () => {
   const moreStories = [
