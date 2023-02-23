@@ -2,17 +2,20 @@ import {
   AspectRatio,
   Box,
   Divider,
+  Flex,
   Heading,
   HStack,
   Image,
   Img,
   Select,
   SimpleGrid,
+  Stack,
   Text,
 } from "@chakra-ui/react";
 import React from "react";
 import { MdOutlineFavorite } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { shopStoriesMore } from "../dataArray.jsx/shopStoriesMore";
 import { womenClothes } from "../dataArray.jsx/WomenCategory";
 
 const ProductPage = () => {
@@ -33,12 +36,12 @@ const ProductPage = () => {
           Women's Sweaters
         </Heading>
 
-        <HStack my={5} justifyContent={"space-between"}>
-          <HStack>
-            <Box>
+        <Flex my={5} justifyContent={"space-between"} flexWrap={"wrap"}>
+          <HStack py={[2, null, 0]}>
+            <Stack>
               <Select placeholder="Show Filter" borderRadius={0}></Select>
-            </Box>
-            <Box>
+            </Stack>
+            <Stack>
               <Select placeholder="Featured" borderRadius={0}>
                 <option value={"Featured"}>Featured</option>
                 <option value={"priceAsc"}>Price: Low - High</option>
@@ -46,30 +49,34 @@ const ProductPage = () => {
                 <option value={"topRated"}>Top Rated</option>
                 <option value={"newArrival"}>New Arrival</option>
               </Select>
-            </Box>
+            </Stack>
           </HStack>
           <HStack>
-            <Box>
+            <Stack>
               <Select placeholder="1" borderRadius={0}>
                 <option value={"2"}>2</option>
               </Select>
-            </Box>
+            </Stack>
             <Text>of 2</Text>
             <Box borderLeft={"1px"} px={3}>
               <Text>View All</Text>
             </Box>
           </HStack>
-        </HStack>
+        </Flex>
 
-        <SimpleGrid columns={[1, null, 3]} spacing={10}>
+        <SimpleGrid columns={[2, null, 3]} spacing={[2, null, 10]}>
           {womenClothes.map((x, i) => (
             <Link key={i} to={`/product/${x.id}`}>
               <Box
                 pos={"relative"}
                 p={2}
-                _hover={{ bg: "white", boxShadow: "md", transform: "scale(1.05)" }}
+                _hover={{
+                  bg: "white",
+                  boxShadow: "md",
+                  transform: "scale(1.05)",
+                }}
               >
-                <Image h={450} src={x.img} />
+                <Image src={x.img} />
                 <Text py={3}>{x.name}</Text>
                 <Text fontWeight={"semibold"}>
                   IDR{" "}
@@ -77,19 +84,19 @@ const ProductPage = () => {
                     maximumSignificantDigits: 3,
                   }).format(x.price)}
                 </Text>
-                <Box
+                <Stack
                   pos={"absolute"}
-                  bottom={"90%"}
-                  left={"60%"}
+                  bottom={["87%", null, "90%"]}
+                  left={["55%", null, "60%"]}
                   w={"60%"}
                   //   border={"1px"}
                   alignItems={"center"}
                 >
                   <Box align={"center"}>
-                    <MdOutlineFavorite size={30} />
+                    <MdOutlineFavorite size={"20%"} />
                     {/* <Box w={20} h={1} bg={"white"} borderRadius={"md"} mt={1} /> */}
                   </Box>
-                </Box>
+                </Stack>
               </Box>
             </Link>
           ))}
@@ -117,68 +124,27 @@ const ProductPage = () => {
           <Heading size={"md"} py={5}>
             Shop, Stories, & More
           </Heading>
-          <HStack>
-            <Box>
-              <Img
-                w={[250, null, 350]}
-                h={[300, null, 450]}
-                src="https://www.jcrew.com/brand_creative/2023/202302-Feb/flyout/2023feb_0214_w_flyouts_img0.jpg"
-              />
-              <Text
-                align={"center"}
-                py={3}
-                fontWeight={"semibold"}
-                fontSize={18}
-              >
-                Spring 2023 Lookbook
-              </Text>
-            </Box>
-            <Box>
-              <Img
-                w={[250, 350, 350]}
-                h={[300, 450, 450]}
-                src="https://www.jcrew.com/brand_creative/2023/202302-Feb/flyout/2023feb_0214_w_flyouts_img1.jpg"
-              />
-              <Text
-                align={"center"}
-                py={3}
-                fontWeight={"semibold"}
-                fontSize={18}
-              >
-                The Essential Pant
-              </Text>
-            </Box>
-            <Box>
-              <Img
-                w={[250, 350, 350]}
-                h={[300, 450, 450]}
-                src="https://www.jcrew.com/brand_creative/2023/202302-Feb/flyout/2023feb_0214_w_flyouts_img2.jpg"
-              />
-              <Text
-                align={"center"}
-                py={3}
-                fontWeight={"semibold"}
-                fontSize={18}
-              >
-                The Winona Loafer Lineup
-              </Text>
-            </Box>
-            <Box>
-              <Img
-                w={[250, 350, 350]}
-                h={[300, 450, 450]}
-                src="https://www.jcrew.com/brand_creative/2023/202302-Feb/flyout/2023feb_0214_w_flyouts_img3.jpg"
-              />
-              <Text
-                align={"center"}
-                py={3}
-                fontWeight={"semibold"}
-                fontSize={18}
-              >
-                The Work Remix
-              </Text>
-            </Box>
-          </HStack>
+          <Flex flexWrap={"nowrap"}>
+            <HStack overflowX={"auto"}>
+              {shopStoriesMore.map((x, i) => (
+                <>
+                  <Img
+                    w={["80%", null, 350]}
+                    h={["80%", null, 450]}
+                    src={x.img}
+                  />
+                  {/* <Text
+                    align={"center"}
+                    py={3}
+                    fontWeight={"semibold"}
+                    fontSize={18}
+                  >
+                    {x.name}
+                  </Text> */}
+                </>
+              ))}
+            </HStack>
+          </Flex>
         </Box>
         <Box border={"2px"} borderColor={"maroon"} p={5} my={"10"}>
           <Text

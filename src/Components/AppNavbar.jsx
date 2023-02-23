@@ -32,6 +32,8 @@ import {
   DrawerOverlay,
   DrawerCloseButton,
   DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
 } from "@chakra-ui/react";
 import { FiSearch } from "react-icons/fi";
 import { SlHandbag } from "react-icons/sl";
@@ -76,6 +78,17 @@ const AppNavbar = () => {
     onClose: onSignupClose,
   } = useDisclosure();
   const {
+    isOpen: isMobileLoginOpen,
+    onOpen: onMobileLoginOpen,
+    onClose: onMobileLoginClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isMobileSignupOpen,
+    onOpen: onMobileSignupOpen,
+    onClose: onMobileSignupClose,
+  } = useDisclosure();
+  const {
     isOpen: isNavOpen,
     onOpen: onNavOpen,
     onClose: onNavClose,
@@ -89,6 +102,15 @@ const AppNavbar = () => {
   const loginModal = () => {
     onLoginOpen();
     onSignupClose();
+  };
+
+  const mobileLoginDrawer = () => {
+    onMobileLoginOpen();
+    onMobileSignupClose();
+  };
+  const mobileSignupDrawer = () => {
+    onMobileSignupOpen();
+    onMobileLoginClose();
   };
 
   return (
@@ -348,7 +370,13 @@ const AppNavbar = () => {
           <DrawerBody>
             <Stack py={3} px={2}>
               <Box bg={"gray.400"} align={"center"}>
-                <Button colorScheme={"green"} m={2} borderRadius={0} w={"90%"}>
+                <Button
+                  colorScheme={"green"}
+                  m={2}
+                  borderRadius={0}
+                  w={"90%"}
+                  onClick={onMobileLoginOpen}
+                >
                   SIGN IN
                 </Button>
               </Box>
@@ -419,6 +447,136 @@ const AppNavbar = () => {
                 <Text as={"u"}>Details</Text>
               </Stack>
             </Stack>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+
+      <Drawer
+        isOpen={isMobileLoginOpen}
+        size={"full"}
+        placement={"bottom"}
+        onClose={onMobileLoginClose}
+        finalFocusRef={btnRef}
+      >
+        {/* <DrawerOverlay /> */}
+        <DrawerContent>
+          <DrawerHeader>SIGN IN</DrawerHeader>
+          <DrawerCloseButton />
+          <DrawerBody>
+            <Input placeholder="Email Address" borderRadius={0} />
+            <Input
+              type={"password"}
+              placeholder="Password"
+              borderRadius={0}
+              my={3}
+            />
+            <HStack justifyContent={"space-between"}>
+              <Checkbox size={"sm"}>Remember me</Checkbox>
+              <Text
+                color={"telegram.900"}
+                fontWeight={"semibold"}
+                fontSize={13}
+              >
+                Forgot Password?
+              </Text>
+            </HStack>
+            <Button w={"full"} colorScheme={"facebook"} borderRadius={0} my={7}>
+              SIGN IN
+            </Button>
+            <Text fontSize={12}>
+              This site is protected by reCAPTCHA and the Google Privacy Policy
+              and Terms of Service apply.
+            </Text>
+            <Divider mt={8} />
+
+            <HStack spacing={1} my={5} justifyContent={"center"}>
+              <Text fontSize={14} as={"span"}>
+                Don't Have an Account?{" "}
+              </Text>
+              <Text
+                as={"span"}
+                fontSize={14}
+                color={"facebook.900"}
+                cursor={"pointer"}
+                fontWeight="semibold"
+                onClick={mobileSignupDrawer}
+              >
+                {" "}
+                Sign Up Now
+              </Text>
+            </HStack>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+
+      <Drawer
+        isOpen={isMobileSignupOpen}
+        size={"full"}
+        placement={"bottom"}
+        onClose={onMobileSignupClose}
+        finalFocusRef={btnRef}
+      >
+        {/* <DrawerOverlay /> */}
+        <DrawerContent>
+          <DrawerHeader>SIGN IN</DrawerHeader>
+          <DrawerCloseButton />
+          <DrawerBody>
+            <Input placeholder="Email Address" borderRadius={0} />
+            <InputGroup size="md" my={3}>
+              <Input
+                pr="4.5rem"
+                type={show ? "text" : "password"}
+                placeholder="Enter password"
+                borderRadius={0}
+              />
+              <InputRightElement width="4.5rem">
+                <Button
+                  h="1.75rem"
+                  size="sm"
+                  onClick={handleShowPassword}
+                  borderRadius={0}
+                  bg={"transparent"}
+                >
+                  {show ? (
+                    <AiOutlineEye size={20} />
+                  ) : (
+                    <AiOutlineEyeInvisible size={20} />
+                  )}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
+            <Checkbox size={"sm"}>Remember me</Checkbox>
+
+            <Button
+              w={"full"}
+              bg={"black"}
+              color={"white"}
+              borderRadius={0}
+              my={5}
+            >
+              CREATE AN ACCOUNT
+            </Button>
+            <Text fontSize={12}>
+              By clicking "Create an Account", you agree to our Terms of Use and
+              Privacy Policy, including the Use of Cookies and the transfer of
+              your personal information to the United States, a jurisdiction
+              that may not provide an equivalent level of data protection to the
+              laws in your home country.
+            </Text>
+            <Divider mt={8} />
+            <HStack my={5} justifyContent={"center"}>
+              <Text fontSize={15}>Already Have an Account? </Text>
+              <Text
+                as={"span"}
+                ml={1}
+                fontSize={15}
+                cursor={"pointer"}
+                onClick={mobileLoginDrawer}
+              >
+                {" "}
+                Sign In
+              </Text>
+            </HStack>
           </DrawerBody>
         </DrawerContent>
       </Drawer>

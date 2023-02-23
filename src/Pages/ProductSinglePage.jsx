@@ -25,6 +25,7 @@ import {
   FaTwitter,
 } from "react-icons/fa";
 import { useParams } from "react-router-dom";
+import { similiarItems } from "../dataArray.jsx/similiarItems";
 import { womenClothes } from "../dataArray.jsx/WomenCategory";
 
 const ProductSinglePage = () => {
@@ -69,59 +70,50 @@ const ProductSinglePage = () => {
         </Text>
         <Divider mt={8} />
       </Box>
-      <Box px={10}>
-        <Text>
+      <Box px={[0, null, 10]}>
+        <Text px={[3, null, 0]}>
           <a href="#">Home</a> / <a href="#">Women</a> / <a>Blazers</a>
         </Text>
 
         <Box py={10}>
-          <Text>Similiar items</Text>
-          <HStack spacing={5} w={"100%"} justify={"center"}>
-            <Image
-              w={"12.5%"}
-              src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0124_hp_w_img11b.jpg"
-            />
-            <Image
-              w={"12.5%"}
-              src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0124_hp_w_img12b.jpg"
-            />
-            <Image
-              w={"12.5%"}
-              src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0124_hp_w_img13b.jpg"
-            />
-            <Image
-              w={"12.5%"}
-              src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0124_hp_w_img14b.jpg"
-            />
-            <Image
-              w={"12.5%"}
-              src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0124_hp_w_img15b.jpg"
-            />
-            <Image
-              w={"12.5%"}
-              src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0124_hp_w_img16b.jpg"
-            />
-          </HStack>
+          <Text px={[3, null, 0]}>Similiar items</Text>
+          <Flex gap={3} w={"100%"} overflowX={"auto"} px={[3, null, 0]}>
+            {similiarItems.map((x, i) => (
+              <>
+                <Image w={["40%", null, "12.5%"]} src={x.img} />
+              </>
+            ))}
+          </Flex>
         </Box>
         <Divider mb={4} />
 
         <Box>
-          <Flex gap={3} justifyContent={"center"} px={70}>
-            <Box w={"75%"}>
-              <Flex gap={2}>
-                <Stack>
+          <Flex
+            gap={3}
+            justifyContent={"center"}
+            px={[0, null, 70]}
+            flexWrap={["wrap", null, "nowrap"]}
+          >
+            <Stack w={["100%", null, "75%"]}>
+              <Flex gap={2} flexWrap={["wrap-reverse", null, "nowrap"]}>
+                <Flex
+                  flexDir={["row", null, "column"]}
+                  overflowX={"auto"}
+                  gap={3}
+                  mx={[2, null, 0]}
+                >
                   <Image src="https://www.jcrew.com/s7-img-facade/AD753_BK0001_m?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=160&hei=160" />
                   <Image src="https://www.jcrew.com/s7-img-facade/AD753_BK0001_m?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=160&hei=160" />
                   <Image src="https://www.jcrew.com/s7-img-facade/AD753_BK0001_m?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=160&hei=160" />
                   <Image src="https://www.jcrew.com/s7-img-facade/AD753_BK0001_m?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=160&hei=160" />
-                </Stack>
+                </Flex>
                 <Box>
                   <Image src="https://www.jcrew.com/s7-img-facade/AD753_BK0001_d2?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=850&hei=850" />
                 </Box>
               </Flex>
-            </Box>
+            </Stack>
 
-            <Stack w={"25%"}>
+            <Stack w={["100%", null, "25%"]} p={[3, null, 0]}>
               <Text fontWeight={"semibold"}>
                 Ella open-front long sweater-blazer
               </Text>
@@ -356,33 +348,40 @@ const ProductSinglePage = () => {
 
         <Divider mt={8} />
 
-        <Box my={10}>
+        <Box my={10} mx={[3, null, 0]}>
           <Heading size="md" align={"center"} py={5}>
             Costumers Also Love
           </Heading>
-          <HStack justify={"center"} spacing={5}>
-            {customersLove.map((x) => (
-              <Box w={250}>
-                <Image src={x.img} />
-                <Button
-                  bg={"transparent"}
-                  borderRadius={0}
-                  w={"full"}
-                  border={"1px"}
-                  my={1}
-                >
-                  QUICK SHOP
-                </Button>
-                <Text>{x.name}</Text>
-                <Text>
-                  IDR{" "}
-                  {Intl.NumberFormat("en-ID", {
-                    maximumSignificantDigits: 3,
-                  }).format(x.price)}
-                </Text>
-              </Box>
-            ))}
-          </HStack>
+          <Flex
+            justify={"center"}
+            gap={5}
+            flexWrap={"nowrap"}
+            // overflowWrap={"normal"}
+          >
+            <HStack overflowX={"auto"}>
+              {customersLove.map((x) => (
+                <>
+                  <Image w={"40%"} src={x.img} />
+                  {/* <Button
+                    bg={"transparent"}
+                    borderRadius={0}
+                    w={"full"}
+                    border={"1px"}
+                    my={1}
+                  >
+                    QUICK SHOP
+                  </Button>
+                  <Text>{x.name}</Text>
+                  <Text>
+                    IDR{" "}
+                    {Intl.NumberFormat("en-ID", {
+                      maximumSignificantDigits: 3,
+                    }).format(x.price)}
+                  </Text> */}
+                </>
+              ))}
+            </HStack>
+          </Flex>
         </Box>
 
         <Divider my={8} />
