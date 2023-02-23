@@ -32,15 +32,15 @@ const AppNavbar = () => {
 
   const navigate = useNavigate()
 
+  const handleResize = () => {
+    setIsMobile(window.innerWidth < 768);
+  };
+
+
   useState(() => {
     window.addEventListener('resize', handleResize);
     handleResize();
   }, []);
-
-
-  const handleResize = () => {
-    setIsMobile(window.innerWidth < 768);
-  };
 
 
 
@@ -82,78 +82,78 @@ const AppNavbar = () => {
           <Text>ini klo mobile</Text>
         </Stack>
       ) : (
-            <HStack justifyContent={"space-between"}>
-            <HStack spacing={10}>
-              <Link to="/">
-                <Image
-                  w={100}
-                  src="https://cdn.shopify.com/s/files/1/0608/6724/8340/files/Logo_klamby_baru_banget_140x@2x.png?v=1643345083"
-                />
-              </Link>
-    
-              <HStack spacing={5} alignItems='center' justifyContent={'center'}>
-                <Stack onClick={() => navigate('/product')} cursor='pointer'>
-                  <Text fontSize={'sm'} color='gray.500'>New</Text>
-                </Stack>
-    
-                <Stack onClick={() => navigate('/product')} cursor='pointer'>
-                  <Text fontSize={'sm'} color='gray.500'>Women</Text>
-                </Stack>
-    
-                <Stack onClick={() => navigate('/product')} cursor='pointer'>
-                  <Text fontSize={'sm'} color='gray.500'>Men</Text>
-                </Stack>
-    
-                <Stack onClick={() => navigate('/product')} cursor='pointer'>
-                  <Text fontSize={'sm'} color='gray.500'>Kids</Text>
-                </Stack>
-    
-                <Stack onClick={() => navigate('/product')} cursor='pointer'>
-                  <Text fontSize={'sm'} color='gray.500'>Swim</Text>
-                </Stack>
-    
-                <Stack onClick={() => navigate('/product')} cursor='pointer'>
-                  <Text fontSize={'sm'} color='gray.500'>Cashmare</Text>
-                </Stack>
-    
-                <Stack onClick={() => navigate('/product')} cursor='pointer'>
-                  <Text fontSize={'sm'} color='gray.500'>Home</Text>
-                </Stack>
-    
-                <Stack onClick={() => navigate('/product')} cursor='pointer'>
-                  <Text fontSize={'sm'} color='gray.500'>Stories</Text>
-                </Stack>
-    
-                <Stack onClick={() => navigate('/product')} cursor='pointer'>
-                  <Text fontSize={'sm'} color='gray.500'>Sales</Text>
-                </Stack>
-    
-              </HStack>
-            </HStack >
+        <HStack justifyContent={"space-between"}>
+          <HStack spacing={10}>
+            <Link to="/">
+              <Image
+                w={100}
+                src="https://cdn.shopify.com/s/files/1/0608/6724/8340/files/Logo_klamby_baru_banget_140x@2x.png?v=1643345083"
+              />
+            </Link>
 
-  <HStack spacing={8}>
-    <Box>
-      <InputGroup>
-        <InputLeftElement
-          pointerEvents="none"
-          children={<FiSearch size={20} color="gray.300" />}
-        />
-        <Input type="text" placeholder="Search" borderRadius={0} />
-      </InputGroup>
-    </Box>
+            <HStack spacing={5} alignItems='center' justifyContent={'center'}>
+              <Stack onClick={() => navigate('/product')} cursor='pointer'>
+                <Text fontSize={'sm'} color='gray.500'>New</Text>
+              </Stack>
 
-    <Text
-      onClick={onLoginOpen}
-      cursor={"pointer"}
-      _hover={{ borderBottom: "2px" }}
-    >
-      Sign In
-    </Text>
-    <Stack onClick={() => navigate('/cart')} cursor='pointer'>
-      <SlHandbag size={20} />
-    </Stack>
-  </HStack>
+              <Stack onClick={() => navigate('/product')} cursor='pointer'>
+                <Text fontSize={'sm'} color='gray.500'>Women</Text>
+              </Stack>
+
+              <Stack onClick={() => navigate('/product')} cursor='pointer'>
+                <Text fontSize={'sm'} color='gray.500'>Men</Text>
+              </Stack>
+
+              <Stack onClick={() => navigate('/product')} cursor='pointer'>
+                <Text fontSize={'sm'} color='gray.500'>Kids</Text>
+              </Stack>
+
+              <Stack onClick={() => navigate('/product')} cursor='pointer'>
+                <Text fontSize={'sm'} color='gray.500'>Swim</Text>
+              </Stack>
+
+              <Stack onClick={() => navigate('/product')} cursor='pointer'>
+                <Text fontSize={'sm'} color='gray.500'>Cashmare</Text>
+              </Stack>
+
+              <Stack onClick={() => navigate('/product')} cursor='pointer'>
+                <Text fontSize={'sm'} color='gray.500'>Home</Text>
+              </Stack>
+
+              <Stack onClick={() => navigate('/product')} cursor='pointer'>
+                <Text fontSize={'sm'} color='gray.500'>Stories</Text>
+              </Stack>
+
+              <Stack onClick={() => navigate('/product')} cursor='pointer'>
+                <Text fontSize={'sm'} color='gray.500'>Sales</Text>
+              </Stack>
+
+            </HStack>
           </HStack >
+
+          <HStack spacing={8}>
+            <Box>
+              <InputGroup>
+                <InputLeftElement
+                  pointerEvents="none"
+                  children={<FiSearch size={20} color="gray.300" />}
+                />
+                <Input type="text" placeholder="Search" borderRadius={0} />
+              </InputGroup>
+            </Box>
+
+            <Text
+              onClick={onLoginOpen}
+              cursor={"pointer"}
+              _hover={{ borderBottom: "2px" }}
+            >
+              Sign In
+            </Text>
+            <Stack onClick={() => navigate('/cart')} cursor='pointer'>
+              <SlHandbag size={20} />
+            </Stack>
+          </HStack>
+        </HStack >
       )}
 
       <Modal isOpen={isLoginOpen} onClose={onLoginClose} size={"xs"}>
