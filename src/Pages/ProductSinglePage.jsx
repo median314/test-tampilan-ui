@@ -3,21 +3,64 @@ import {
   Button,
   Divider,
   Flex,
+  Heading,
   HStack,
   Image,
+  List,
+  ListItem,
   Select,
   SimpleGrid,
   Spacer,
   Stack,
   Text,
+  UnorderedList,
 } from "@chakra-ui/react";
 import React from "react";
-import { FaHeart, FaStar } from "react-icons/fa";
+import {
+  FaEye,
+  FaFacebook,
+  FaHeart,
+  FaStar,
+  FaTumblr,
+  FaTwitter,
+} from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { womenClothes } from "../dataArray.jsx/WomenCategory";
 
 const ProductSinglePage = () => {
-  console.log();
+  const customersLove = [
+    {
+      id: 1,
+      name: "Louisa lady jacket in Italian ponte",
+      img: "https://edge.curalate.com/v1/img/e2dU8SuApH7Cy4WR2aWwS4mstT8uUrADQWQrCoaBVw0=/w/450?typ=webp",
+      price: 7132386,
+    },
+    {
+      id: 2,
+      name: "Louisa lady jacket in Italian ponte",
+      img: "https://edge.curalate.com/v1/img/bWeZrqQzA-7NsctVxhp7FpuEydy1oDsqyaf0veH5Hls=/w/450?typ=webp",
+      price: 7132386,
+    },
+    {
+      id: 3,
+      name: "Louisa lady jacket in Italian ponte",
+      img: "https://edge.curalate.com/v1/img/QtqvagY4HBXyvvIXc1ZYXNWT1Llp1FB_pTTEZSpRMwo=/w/450?typ=webp",
+      price: 4367801,
+    },
+    {
+      id: 4,
+      name: "Louisa lady jacket in Italian ponte",
+      img: "https://edge.curalate.com/v1/img/mqgKeoxwZr_oZgJsvFKLwiX-PhKoijiYSexiN7HBRqA=/w/450?typ=webp",
+      price: 9766207,
+    },
+    {
+      id: 5,
+      name: "Louisa lady jacket in Italian ponte",
+      img: "https://edge.curalate.com/v1/img/e2dU8SuApH7Cy4WR2aWwS4mstT8uUrADQWQrCoaBVw0=/w/450?typ=webp",
+      price: 4367801,
+    },
+  ];
+
   return (
     <Box mt={75}>
       <Box py={5}>
@@ -61,9 +104,10 @@ const ProductSinglePage = () => {
           </HStack>
         </Box>
         <Divider mb={4} />
+
         <Box>
           <Flex gap={3} justifyContent={"center"} px={70}>
-            <Box w={"75%"} border={"1px"}>
+            <Box w={"75%"}>
               <Flex gap={2}>
                 <Stack>
                   <Image src="https://www.jcrew.com/s7-img-facade/AD753_BK0001_m?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=160&hei=160" />
@@ -77,7 +121,7 @@ const ProductSinglePage = () => {
               </Flex>
             </Box>
 
-            <Stack border={"1px"} w={"25%"}>
+            <Stack w={"25%"}>
               <Text fontWeight={"semibold"}>
                 Ella open-front long sweater-blazer
               </Text>
@@ -121,6 +165,7 @@ const ProductSinglePage = () => {
                 </HStack>
 
                 <Spacer />
+
                 <Stack spacing={0}>
                   <HStack justifyContent={"space-between"} pt={10}>
                     <Box fontSize={12} w={"40%"}>
@@ -206,7 +251,7 @@ const ProductSinglePage = () => {
                   </Box>
                 </SimpleGrid>
 
-                <HStack mt={3}>
+                <HStack py={5}>
                   <Text fontSize={14} fontWeight={"semibold"}>
                     Quantity:
                   </Text>
@@ -222,7 +267,7 @@ const ProductSinglePage = () => {
                   </Select>
                 </HStack>
 
-                <Box>
+                <Box py={5}>
                   <Text as={"i"} fontSize={14} fontWeight={"semibold"}>
                     Price include duties and taxes
                   </Text>
@@ -246,10 +291,101 @@ const ProductSinglePage = () => {
                     </Button>
                   </HStack>
                 </Box>
+
+                <HStack spacing={1} justify={"center"} my={3}>
+                  <FaEye size={12} />
+                  <Text fontWeight={"semibold"} fontSize={12}>
+                    311 people
+                  </Text>
+                  <Text fontSize={12} as={"span"}>
+                    looked at this item in the last hour.
+                  </Text>
+                </HStack>
+
+                <Divider py={3} />
+
+                <Box py={5} fontSize={14}>
+                  <Heading size={"sm"}>Size & Fit</Heading>
+                  <UnorderedList>
+                    <ListItem>Relaxed Fit</ListItem>
+                    <ListItem>Hits at hip</ListItem>
+                    <ListItem>Body length: 19"</ListItem>
+                    <ListItem>Sleeve length: 29 1/2"</ListItem>
+                  </UnorderedList>
+                </Box>
+
+                <Divider my={10} />
+
+                <Stack py={10}>
+                  <Heading size={"sm"}>Product Details</Heading>
+                  <Text fontSize={14}>
+                    Meet the Emilie sweater lady jacket, an elevated new style
+                    that you can wear on its own or over your favorite cashmere
+                    tee. Featuring a cute, cropped silhouette, polished gold
+                    buttons down the front and patch pockets, this lightweight
+                    layer transitions easily from spring to summer, and beyond.
+                    By buying cotton products from J.Crew, you're supporting our
+                    investment in Better Cotton's mission to help cotton
+                    communities survive and thrive while protecting and
+                    restoring the environment. This product is sourced through a
+                    system of mass balance and therefore may not contain Better
+                    Cotton.
+                  </Text>
+                  <Box>
+                    <UnorderedList fontSize={14}>
+                      <ListItem>100% Cotton</ListItem>
+                      <ListItem>Machine Wash</ListItem>
+                      <ListItem>Import</ListItem>
+                      <ListItem>Item BQ17</ListItem>
+                    </UnorderedList>
+                  </Box>
+
+                  <Divider my={10} />
+
+                  <HStack py={10} justifyContent={"center"} spacing={5}>
+                    <Heading size="md">Share</Heading>
+                    <FaFacebook size={20} />
+                    <FaTwitter size={20} />
+                    <FaTumblr size={20} />
+                  </HStack>
+                </Stack>
               </Stack>
             </Stack>
           </Flex>
         </Box>
+
+        <Divider mt={8} />
+
+        <Box my={10}>
+          <Heading size="md" align={"center"} py={5}>
+            Costumers Also Love
+          </Heading>
+          <HStack justify={"center"} spacing={5}>
+            {customersLove.map((x) => (
+              <Box w={250}>
+                <Image src={x.img} />
+                <Button
+                  bg={"transparent"}
+                  borderRadius={0}
+                  w={"full"}
+                  border={"1px"}
+                  my={1}
+                >
+                  QUICK SHOP
+                </Button>
+                <Text>{x.name}</Text>
+                <Text>
+                  IDR{" "}
+                  {Intl.NumberFormat("en-ID", {
+                    maximumSignificantDigits: 3,
+                  }).format(x.price)}
+                </Text>
+              </Box>
+            ))}
+          </HStack>
+        </Box>
+
+        <Divider my={8} />
       </Box>
     </Box>
   );
