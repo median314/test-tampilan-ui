@@ -22,6 +22,7 @@ import { FiSearch } from "react-icons/fi";
 import { SlHandbag } from "react-icons/sl";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const AppNavbar = () => {
   const [show, setShow] = useState(false);
@@ -63,10 +64,13 @@ const AppNavbar = () => {
     >
       <HStack justifyContent={"space-between"}>
         <HStack spacing={10}>
-          <Image
-            w={100}
-            src="https://www.jcrew.com/next-static/images/sidecar-modules/navigation/jcrew-logo-fall-21.svg"
-          />
+          <Link to="/">
+            <Image
+              w={100}
+              src="https://www.jcrew.com/next-static/images/sidecar-modules/navigation/jcrew-logo-fall-21.svg"
+            />
+          </Link>
+
           <HStack spacing={4}>
             <a href="#">New</a>
             <a href="12">Women</a>
@@ -98,7 +102,9 @@ const AppNavbar = () => {
           >
             Sign In
           </Text>
-          <SlHandbag size={20} />
+          <Link to="/cart">
+            <SlHandbag size={20} />
+          </Link>
         </HStack>
       </HStack>
 
