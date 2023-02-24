@@ -265,7 +265,7 @@ const AppNavbar = () => {
             <Button w={"full"} colorScheme={"facebook"} borderRadius={0} my={7}>
               SIGN IN
             </Button>
-            <Text fontSize={12}>
+            <Text  fontSize={'xs'} color='gray.600'>
               This site is protected by reCAPTCHA and the Google Privacy Policy
               and Terms of Service apply.
             </Text>

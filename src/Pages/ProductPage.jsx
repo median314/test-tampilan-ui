@@ -93,7 +93,7 @@ const ProductPage = () => {
                   alignItems={"center"}
                 >
                   <Box align={"center"}>
-                    <MdOutlineFavorite size={"20%"} />
+                    <MdOutlineFavorite size={'20%'} />
                     {/* <Box w={20} h={1} bg={"white"} borderRadius={"md"} mt={1} /> */}
                   </Box>
                 </Stack>
