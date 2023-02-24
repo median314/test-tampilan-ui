@@ -301,10 +301,8 @@ const HomePage = () => {
             <SimpleGrid
               spacing={5}
               columns={[2, null, 4]}
-              // py={4}
               pb={5}
-              w={[300, null, null]}
-              // border={"1px"}
+              minW={[300, null, null]}
             >
               <Button
                 border={"1px"}

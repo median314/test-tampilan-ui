@@ -134,12 +134,12 @@ const AppNavbar = () => {
               </Box>
               <FiSearch size={20} color="gray.300" />
             </HStack>
-            <Link to="/">
+            <Stack onClick={() => navigate('/')} cursor='pointer'>
               <Image
                 w={100}
                 src="https://cdn.shopify.com/s/files/1/0608/6724/8340/files/Logo_klamby_baru_banget_140x@2x.png?v=1643345083"
               />
-            </Link>
+            </Stack>
             <Stack onClick={() => navigate("/cart")} cursor="pointer">
               <SlHandbag size={20} />
             </Stack>
@@ -148,12 +148,12 @@ const AppNavbar = () => {
       ) : (
         <HStack justifyContent={"space-between"}>
           <HStack spacing={10}>
-            <Link to="/">
+            <Stack onClick={() => navigate('/')} cursor='pointer'>
               <Image
                 w={100}
                 src="https://cdn.shopify.com/s/files/1/0608/6724/8340/files/Logo_klamby_baru_banget_140x@2x.png?v=1643345083"
               />
-            </Link>
+            </Stack>
 
             <HStack spacing={5} alignItems="center" justifyContent={"center"}>
               <Stack onClick={() => navigate("/product")} cursor="pointer">
@@ -271,7 +271,7 @@ const AppNavbar = () => {
             </Text>
           </ModalBody>
           <ModalFooter mt={10}>
-            <Text align={"center"} fontSize={14}>
+            <Text align={"center"} fontSize={'sm'} color='gray.600'>
               Don't Have an Account?{" "}
             </Text>
             <Text
@@ -333,7 +333,7 @@ const AppNavbar = () => {
             >
               CREATE AN ACCOUNT
             </Button>
-            <Text fontSize={12}>
+            <Text fontSize={'xs'} color='gray.600'>
               By clicking "Create an Account", you agree to our Terms of Use and
               Privacy Policy, including the Use of Cookies and the transfer of
               your personal information to the United States, a jurisdiction
@@ -341,8 +341,8 @@ const AppNavbar = () => {
               laws in your home country.
             </Text>
           </ModalBody>
-          <ModalFooter mt={10}>
-            <Text align={"center"} fontSize={15}>
+          <ModalFooter >
+            <Text align={"center"} fontSize={'sm'} color='gray.600'>
               Already Have an Account?{" "}
             </Text>
             <Text
@@ -351,6 +351,8 @@ const AppNavbar = () => {
               fontSize={15}
               cursor={"pointer"}
               onClick={loginModal}
+              fontWeight='bold'
+              color='facebook.600'
             >
               {" "}
               Sign In
@@ -483,20 +485,20 @@ const AppNavbar = () => {
             <Button w={"full"} colorScheme={"facebook"} borderRadius={0} my={7}>
               SIGN IN
             </Button>
-            <Text fontSize={12}>
+            <Text fontSize={'sm'} color='gray.600'>
               This site is protected by reCAPTCHA and the Google Privacy Policy
               and Terms of Service apply.
             </Text>
             <Divider mt={8} />
 
             <HStack spacing={1} my={5} justifyContent={"center"}>
-              <Text fontSize={14} as={"span"}>
+              <Text fontSize={'sm'} color='gray.600' as={"span"} >
                 Don't Have an Account?{" "}
               </Text>
               <Text
                 as={"span"}
                 fontSize={14}
-                color={"facebook.900"}
+                color={"facebook.600"}
                 cursor={"pointer"}
                 fontWeight="semibold"
                 onClick={mobileSignupDrawer}
@@ -565,13 +567,14 @@ const AppNavbar = () => {
             </Text>
             <Divider mt={8} />
             <HStack my={5} justifyContent={"center"}>
-              <Text fontSize={15}>Already Have an Account? </Text>
+              <Text fontSize={'sm'} color='gray.600'>Already Have an Account? </Text>
               <Text
                 as={"span"}
                 ml={1}
                 fontSize={15}
                 cursor={"pointer"}
                 onClick={mobileLoginDrawer}
+                color={"facebook.600"}
               >
                 {" "}
                 Sign In

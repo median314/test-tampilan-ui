@@ -67,22 +67,22 @@ const AppFooter = () => {
                 <Heading pb={2} size={"md"}>
                   Help
                 </Heading>
-                <Text>Costumer Service</Text>
-                <Text>Track Order</Text>
-                <Text>Return & Exchange</Text>
-                <Text>Shipping</Text>
-                <Text>International Orders</Text>
-                <Text>Contact Us</Text>
+                <Text fontSize={'sm'} color='gray.600'>Costumer Service</Text>
+                <Text fontSize={'sm'} color='gray.600'>Track Order</Text>
+                <Text fontSize={'sm'} color='gray.600'>Return & Exchange</Text>
+                <Text fontSize={'sm'} color='gray.600'>Shipping</Text>
+                <Text fontSize={'sm'} color='gray.600'>International Orders</Text>
+                <Text fontSize={'sm'} color='gray.600'>Contact Us</Text>
               </Box>
               <Box w={["50%", null, "50%"]}>
                 <Heading pb={2} size={"md"}>
                   Quick Links
                 </Heading>
-                <Text>Find a Store</Text>
-                <Text>Size Charts</Text>
-                <Text>Refer a Friend</Text>
-                <Text>Offers & Promotions</Text>
-                <Text>My Favorites</Text>
+                <Text fontSize={'sm'} color='gray.600'>Find a Store</Text>
+                <Text fontSize={'sm'} color='gray.600'>Size Charts</Text>
+                <Text fontSize={'sm'} color='gray.600'>Refer a Friend</Text>
+                <Text fontSize={'sm'} color='gray.600'>Offers & Promotions</Text>
+                <Text fontSize={'sm'} color='gray.600'>My Favorites</Text>
               </Box>
             </Flex>
 
@@ -90,15 +90,15 @@ const AppFooter = () => {
               <Heading pb={2} size={"md"}>
                 About J.Crew
               </Heading>
-              <Text>Our Story</Text>
-              <Text>Careers</Text>
-              <Text>Social Responsibility</Text>
-              <Text>California Transparency Act/Modern Slavery Act</Text>
-              <Text>Investor Relations</Text>
-              <Text>Terms of Use</Text>
-              <Text>Privacy Policy</Text>
-              <Text>California Do Not Sell My Personal Information</Text>
-              <Text>Diversity, Equity and Inclusion at J.Crew Group</Text>
+              <Text fontSize={'sm'} color='gray.600'>Our Story</Text>
+              <Text fontSize={'sm'} color='gray.600'>Careers</Text>
+              <Text fontSize={'sm'} color='gray.600'>Social Responsibility</Text>
+              <Text fontSize={'sm'} color='gray.600'> California Transparency Act/Modern Slavery Act</Text>
+              <Text fontSize={'sm'} color='gray.600'> Investor Relations</Text>
+              <Text fontSize={'sm'} color='gray.600'>Terms of Use</Text>
+              <Text fontSize={'sm'} color='gray.600'>Privacy Policy</Text>
+              <Text fontSize={'sm'} color='gray.600'>California Do Not Sell My Personal Information</Text>
+              <Text fontSize={'sm'} color='gray.600'>Diversity, Equity and Inclusion at J.Crew Group</Text>
             </Box>
           </Flex>
           <Stack py={4}>
@@ -111,7 +111,7 @@ const AppFooter = () => {
             </HStack>
 
             <Box>
-              <Text my={4}>
+              <Text my={4} fontSize={'sm'} fontWeight='bold' color='gray.700'>
                 <a>Indonesia</a>
               </Text>
               <HStack>
@@ -135,7 +135,7 @@ const AppFooter = () => {
         <Box>
           <Stack>
             <Text fontWeight={"bold"}>Like Being First?</Text>
-            <Text>Get can't-miss style news, before everybody else.</Text>
+            <Text fontSize={'sm'} color='gray.600'>Get can't-miss style news, before everybody else.</Text>
             <HStack spacing={"none"}>
               <Input
                 borderColor={"black"}
