@@ -34,6 +34,15 @@ import {
   DrawerBody,
   DrawerFooter,
   DrawerHeader,
+  useToast,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverHeader,
+  PopoverBody,
+  Heading,
 } from "@chakra-ui/react";
 import { FiSearch } from "react-icons/fi";
 import { SlHandbag } from "react-icons/sl";
@@ -42,19 +51,42 @@ import {
   AiOutlineEyeInvisible,
   AiOutlineRight,
 } from "react-icons/ai";
-import React, { useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HamburgerIcon } from "@chakra-ui/icons";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaUser } from "react-icons/fa";
+import AuthProvider from "../Hooks/AuthProvider";
+import { onAuthStateChanged, updateProfile } from "firebase/auth";
+import { auth, db } from "../Config/firebase";
+import { doc, onSnapshot, setDoc } from "firebase/firestore";
+import AuthContext from "../Hooks/authContext";
+import store from "store";
+// import { useAuthDispatch, useAuthState } from "../Hooks/Context";
+import { LoginUser, logout, useAuthDispatch, useAuthState } from "../Hooks";
+import { signUp } from "../Hooks/actions";
 
 const AppNavbar = () => {
+  // const [currentUser, setCurrentUser] = useState();
+  // const currentUser = useAuthentication();
+  // const cart = useCart();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const [show, setShow] = useState(false);
+  const [cart, setCart] = useState();
   const handleShowPassword = () => setShow(!show);
 
+  const dispatch = useAuthDispatch();
+  const { loading, user, errorMessage } = useAuthState();
+
+  // const { signUp, signOut, cart, currentUser } = useContext();
   const navigate = useNavigate();
   const btnRef = useRef();
+  const toast = useToast();
 
   const handleResize = () => {
     setIsMobile(window.innerWidth < 768);
@@ -66,6 +98,12 @@ const AppNavbar = () => {
     window.addEventListener("resize", handleResize);
     handleResize();
   }, []);
+
+  const {
+    isOpen: isPopoverOpen,
+    onToggle,
+    onClose: onPopoverClose,
+  } = useDisclosure();
 
   const {
     isOpen: isLoginOpen,
@@ -88,6 +126,7 @@ const AppNavbar = () => {
     onOpen: onMobileSignupOpen,
     onClose: onMobileSignupClose,
   } = useDisclosure();
+
   const {
     isOpen: isNavOpen,
     onOpen: onNavOpen,
@@ -108,14 +147,235 @@ const AppNavbar = () => {
     onMobileLoginOpen();
     onMobileSignupClose();
   };
+
   const mobileSignupDrawer = () => {
     onMobileSignupOpen();
     onMobileLoginClose();
   };
 
+  const handleCheckbox = () => {
+    setRememberMe(!rememberMe);
+    console.log(rememberMe, "ini checkbox");
+  };
+
+  //signUpFunction
+  const handleSignup = async (e) => {
+    let payload = {
+      email,
+      password,
+      name,
+    };
+
+    try {
+      let response = await signUp(dispatch, payload);
+
+      if (
+        response !== undefined &&
+        name !== "" &&
+        email !== "" &&
+        password !== ""
+      ) {
+        toast({
+          position: "top",
+          title: "Wearing Klamby",
+          description: "Signup Success",
+          status: "success",
+          duration: 2000,
+        });
+      } else if (response === undefined) {
+        toast({
+          position: "top",
+          title: "Wearing Klamby",
+          description:
+            "Gagal Login, pastikan Email/Password yang dimasukkan benar ",
+          status: "error",
+          duration: 2000,
+        });
+      }
+
+      // if (name !== "" && email !== "" && password !== "") {
+
+      // .then(async (userCredential) => {
+      //   await updateProfile(auth.currentUser, {
+      //     displayName: payload,
+      //   });
+
+      //   const user = userCredential.user;
+      //   await setDoc(doc(db, "users", user.uid), {
+      //     name: name,
+      //     email: user.email,
+      //     uid_user: user.uid,
+      //     createdAt: new Date(),
+      //   });
+
+      //   toast({
+      //     title: "Wearing Klamby",
+      //     description: `User created with id ${user.uid}`,
+      //     status: "success",
+      //     duration: 2000,
+      //   });
+
+      //   onMobileSignupClose();
+      // })
+
+      // .catch((error) => {
+      //   toast({
+      //     title: "Wearing Klamby",
+      //     description: `User not created, ${error.message}`,
+      //     status: "error",
+      //     duration: 2000,
+      //   });
+      // });
+    } catch (error) {
+      console.log(error, "ini error");
+    }
+    //   const displayName = name;
+    //   signUp(email, password)
+    //     .then(async (userCredential) => {
+    //       await updateProfile(auth.currentUser, {
+    //         displayName,
+    //         // photoURL,
+    //       });
+
+    //       const user = userCredential.user;
+    //       await setDoc(doc(db, "users", user.uid), {
+    //         name: name,
+    //         email: user.email,
+    //         uid_user: user.uid,
+    //         createdAt: new Date(),
+    //       });
+
+    //       toast({
+    //         title: "Wearing Klamby",
+    //         description: `User created with id ${user.uid}`,
+    //         status: "success",
+    //         duration: 1000,
+    //       });
+
+    //       onMobileSignupClose();
+    //       navigate("/");
+    //     })
+    //     .catch((error) => {
+    //       toast({
+    //         title: "Wearing Klamby",
+    //         description: `User not created, ${error.message}`,
+    //         status: "error",
+    //         duration: 1000,
+    //       });
+    //     });
+  };
+
+  //loginFunction
+  const handleLogin = async (e) => {
+    let payload = {
+      email,
+      password,
+    };
+
+    try {
+      let response = await LoginUser(dispatch, payload);
+      if (response === undefined) {
+        toast({
+          position: "top",
+          title: "Wearing Klamby",
+          description:
+            "Gagal Login, pastikan Email/Password yang dimasukkan benar ",
+          status: "error",
+          duration: 2000,
+        });
+      } else if (response.user.uid !== undefined) {
+        // login(email, password);
+        window.location.href = "/";
+
+        toast({
+          position: "top",
+          title: "Wearing Klamby",
+          description: "Login Success",
+          status: "success",
+          duration: 2000,
+        });
+
+        // navigate("/");
+      }
+    } catch (error) {
+      toast({
+        position: "top",
+        title: "Wearing Klamby",
+        description:
+          "Gagal Login, pastikan Email/Password yang dimasukkan benar ",
+        status: "error",
+        duration: 2000,
+      });
+    }
+    // if (email !== "" && password !== "") {
+    //   login(email, password);
+
+    //   toast({
+    //     title: "Wearing Klamby",
+    //     description: "Login Success",
+    //     status: "success",
+    //     duration: 1000,
+    //   });
+
+    //   navigate("/");
+
+    //   console.log(currentUser);
+    // } else {
+    //   toast({
+    //     title: "Wearing Klamby",
+    //     description:
+    //       "Gagal Login, pastikan Email/Password yang dimasukkan benar ",
+    //     status: "error",
+    //     duration: 1000,
+    //   });
+    // }
+  };
+
+  //signout function
+  const handleSignout = () => {
+    try {
+      logout(dispatch);
+
+      toast({
+        position: "top",
+        title: "Wearing Klamby",
+        description: "Logout Success",
+        status: "success",
+        duration: 1000,
+      });
+
+      window.location.href("/");
+    } catch (error) {
+      console.log(error, "ini error");
+    }
+  };
+
+  const getCart = async () => {
+    if (user) {
+      try {
+        onSnapshot(doc(db, "cart", user?.uid), (doc) => {
+          setCart(doc.data());
+        });
+      } catch (error) {
+        console.log(error, "ini error");
+      }
+
+      return cart;
+    } else {
+      console.log("youre not login");
+      window.location.href("/");
+    }
+  };
+
+  useEffect(() => {
+    getCart();
+
+    return () => {};
+  }, [user]);
+
   return (
     <Box
-      px={5}
+      px={10}
       py={3}
       bg={"white"}
       borderBottom={"1px"}
@@ -129,26 +389,50 @@ const AppNavbar = () => {
         <>
           <HStack justify={"space-between"}>
             <HStack>
-              <Box onClick={onNavOpen}>
+              <Box onClick={onNavOpen} px={2}>
                 <HamburgerIcon />
               </Box>
-              <FiSearch size={20} color="gray.300" />
+              <HStack onClick={setShowSearch}>
+                <FiSearch size={20} color="gray.300" />
+                {/* <Input size={"sm"} placeholder="Search" /> */}
+              </HStack>
             </HStack>
-            <Stack onClick={() => navigate('/')} cursor='pointer'>
+            <Stack onClick={() => navigate("/")} cursor="pointer">
               <Image
                 w={100}
                 src="https://cdn.shopify.com/s/files/1/0608/6724/8340/files/Logo_klamby_baru_banget_140x@2x.png?v=1643345083"
               />
             </Stack>
-            <Stack onClick={() => navigate("/cart")} cursor="pointer">
+            <HStack
+              pos={"relative"}
+              onClick={() => navigate("/cart")}
+              cursor="pointer"
+              spacing={-0.5}
+            >
               <SlHandbag size={20} />
-            </Stack>
+              {cart?.data?.length > 0 ? (
+                <Box
+                  pos={"absolute"}
+                  bg={"blue.500"}
+                  color={"white"}
+                  borderRadius={"full"}
+                  w={5}
+                  h={5}
+                  left={"100%"}
+                  bottom={"35%"}
+                  fontSize={[12, null, 10]}
+                  align={"center"}
+                >
+                  <Text fontWeight={"semibold"}>{cart?.data?.length}</Text>
+                </Box>
+              ) : null}
+            </HStack>
           </HStack>
         </>
       ) : (
         <HStack justifyContent={"space-between"}>
           <HStack spacing={10}>
-            <Stack onClick={() => navigate('/')} cursor='pointer'>
+            <Stack onClick={() => navigate("/")} cursor="pointer">
               <Image
                 w={100}
                 src="https://cdn.shopify.com/s/files/1/0608/6724/8340/files/Logo_klamby_baru_banget_140x@2x.png?v=1643345083"
@@ -158,43 +442,192 @@ const AppNavbar = () => {
             <HStack spacing={5} alignItems="center" justifyContent={"center"}>
               <Stack onClick={() => navigate("/product")} cursor="pointer">
                 <Text fontSize={"sm"} color="gray.500">
-                  New
+                  Shop All
                 </Text>
               </Stack>
 
               <Stack onClick={() => navigate("/product")} cursor="pointer">
                 <Text fontSize={"sm"} color="gray.500">
-                  Women
+                  Daily Blazer Series
                 </Text>
               </Stack>
 
               <Stack onClick={() => navigate("/product")} cursor="pointer">
                 <Text fontSize={"sm"} color="gray.500">
-                  Men
+                  Kaela Collection
                 </Text>
               </Stack>
 
               <Stack onClick={() => navigate("/product")} cursor="pointer">
                 <Text fontSize={"sm"} color="gray.500">
-                  Kids
+                  Minor Sale
+                </Text>
+              </Stack>
+
+              <Stack>
+                <Popover isLazy trigger="hover">
+                  <PopoverTrigger>
+                    <Text
+                      fontSize={"sm"}
+                      color="gray.500"
+                      onClick={() => navigate("/product")}
+                      cursor="pointer"
+                    >
+                      Collection
+                    </Text>
+                  </PopoverTrigger>
+                  <PopoverContent w={width} p={10}>
+                    {/* <PopoverHeader fontWeight="semibold">
+                      Popover placement
+                    </PopoverHeader> */}
+                    <PopoverArrow />
+                    <PopoverCloseButton />
+                    <PopoverBody>
+                      <Flex justify={"center"} gap={20}>
+                        <Heading
+                          size={"md"}
+                          onClick={() => navigate("/product")}
+                          cursor="pointer"
+                        >
+                          Scarf
+                        </Heading>
+                        <Stack>
+                          <Heading
+                            size={"md"}
+                            onClick={() => navigate("/product")}
+                            cursor="pointer"
+                          >
+                            Tops
+                          </Heading>
+                          <Text
+                            onClick={() => navigate("/product")}
+                            cursor="pointer"
+                            color={"blackAlpha.700"}
+                          >
+                            Blouse
+                          </Text>
+                          <Text
+                            onClick={() => navigate("/product")}
+                            cursor="pointer"
+                            color={"blackAlpha.700"}
+                          >
+                            Tunic
+                          </Text>
+                          <Text
+                            onClick={() => navigate("/product")}
+                            cursor="pointer"
+                            color={"blackAlpha.700"}
+                          >
+                            T-Shirt
+                          </Text>
+                          <Text
+                            onClick={() => navigate("/product")}
+                            cursor="pointer"
+                            color={"blackAlpha.700"}
+                          >
+                            Outer
+                          </Text>
+                          <Text
+                            onClick={() => navigate("/product")}
+                            cursor="pointer"
+                            color={"blackAlpha.700"}
+                          >
+                            Inner
+                          </Text>
+                        </Stack>
+                        <Stack>
+                          <Heading
+                            size={"md"}
+                            onClick={() => navigate("/product")}
+                            cursor="pointer"
+                          >
+                            Bottoms
+                          </Heading>
+                          <Text
+                            onClick={() => navigate("/product")}
+                            cursor="pointer"
+                            color={"blackAlpha.700"}
+                          >
+                            Pants
+                          </Text>
+                          <Text
+                            onClick={() => navigate("/product")}
+                            cursor="pointer"
+                            color={"blackAlpha.700"}
+                          >
+                            Skirt
+                          </Text>
+                        </Stack>
+                        <Stack>
+                          <Heading
+                            size={"md"}
+                            onClick={() => navigate("/product")}
+                            cursor="pointer"
+                          >
+                            Others
+                          </Heading>
+                          <Text
+                            onClick={() => navigate("/product")}
+                            cursor="pointer"
+                            color={"blackAlpha.700"}
+                          >
+                            Brooch
+                          </Text>
+                          <Text
+                            onClick={() => navigate("/product")}
+                            cursor="pointer"
+                            color={"blackAlpha.700"}
+                          >
+                            Dress
+                          </Text>
+                          <Text
+                            onClick={() => navigate("/product")}
+                            cursor="pointer"
+                            color={"blackAlpha.700"}
+                          >
+                            Pajamas
+                          </Text>
+                          <Text
+                            onClick={() => navigate("/product")}
+                            cursor="pointer"
+                            color={"blackAlpha.700"}
+                          >
+                            Prayer Set
+                          </Text>
+                        </Stack>
+                        <Stack justifyContent={"center"}>
+                          <Image
+                            boxSize={200}
+                            src="https://www.jcrew.com/s7-img-facade/BJ706_YD3030?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=280&hei=280"
+                          />
+                          <Heading size={"md"} align={"center"}>
+                            Tops
+                          </Heading>
+                        </Stack>
+                        <Stack justifyContent={"center"}>
+                          <Image
+                            boxSize={200}
+                            src="https://www.jcrew.com/s7-img-facade/BP499_PR5699_m?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=540&hei=540"
+                          />
+                          <Heading size={"md"} align={"center"}>
+                            Bottoms
+                          </Heading>
+                        </Stack>
+                      </Flex>
+                    </PopoverBody>
+                  </PopoverContent>
+                </Popover>
+              </Stack>
+
+              <Stack onClick={() => navigate("/product")} cursor="pointer">
+                <Text fontSize={"sm"} color="gray.500">
+                  Journal
                 </Text>
               </Stack>
 
               <Stack onClick={() => navigate("/product")} cursor="pointer">
                 <Text fontSize={"sm"} color="gray.500">
-                  Swim
-                </Text>
-              </Stack>
-
-              <Stack onClick={() => navigate("/product")} cursor="pointer">
-                <Text fontSize={"sm"} color="gray.500">
-                  Cashmare
-                </Text>
-              </Stack>
-
-              <Stack onClick={() => navigate("/product")} cursor="pointer">
-                <Text fontSize={"sm"} color="gray.500">
-                  Home
+                  Store Location
                 </Text>
               </Stack>
 
@@ -212,7 +645,7 @@ const AppNavbar = () => {
             </HStack>
           </HStack>
 
-          <HStack spacing={8}>
+          <HStack spacing={7}>
             <Box>
               <InputGroup>
                 <InputLeftElement
@@ -223,15 +656,51 @@ const AppNavbar = () => {
               </InputGroup>
             </Box>
 
-            <Text
-              onClick={onLoginOpen}
-              cursor={"pointer"}
-              _hover={{ borderBottom: "2px" }}
-            >
-              Sign In
-            </Text>
+            {Object.keys(user).length > 0 ? (
+              <Stack
+                justifyContent={"center"}
+                alignItems={"center"}
+                spacing={0}
+                pt={2}
+              >
+                <FaUser size={20} />
+                <Text fontSize={10}>Logged in as {user.email}</Text>
+                <Text
+                  fontSize={10}
+                  onClick={handleSignout}
+                  cursor={"pointer"}
+                  color={"blue.400"}
+                >
+                  sign out
+                </Text>
+              </Stack>
+            ) : (
+              <Text
+                onClick={onLoginOpen}
+                cursor={"pointer"}
+                _hover={{ borderBottom: "2px" }}
+              >
+                Sign In
+              </Text>
+            )}
             <Stack onClick={() => navigate("/cart")} cursor="pointer">
               <SlHandbag size={20} />
+              {cart?.data?.length > 0 ? (
+                <Box
+                  pos={"absolute"}
+                  bg={"blue.500"}
+                  color={"white"}
+                  borderRadius={"full"}
+                  w={5}
+                  h={5}
+                  right={"1.5%"}
+                  bottom={"55%"}
+                  fontSize={[12, null, 10]}
+                  align={"center"}
+                >
+                  <Text fontWeight={"semibold"}>{cart?.data?.length}</Text>
+                </Box>
+              ) : null}
             </Stack>
           </HStack>
         </HStack>
@@ -245,15 +714,26 @@ const AppNavbar = () => {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Input placeholder="Email Address" borderRadius={0} />
+            <Input
+              placeholder="Email Address"
+              borderRadius={0}
+              onChange={(e) => setEmail(e.target.value)}
+            />
             <Input
               type={"password"}
               placeholder="Password"
               borderRadius={0}
               my={3}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <HStack justifyContent={"space-between"}>
-              <Checkbox size={"sm"}>Remember me</Checkbox>
+              <Checkbox
+                size={"sm"}
+                checked={rememberMe}
+                onChange={(e) => handleCheckbox(e.target.value)}
+              >
+                Remember me
+              </Checkbox>
               <Text
                 color={"telegram.900"}
                 fontWeight={"semibold"}
@@ -262,16 +742,22 @@ const AppNavbar = () => {
                 Forgot Password?
               </Text>
             </HStack>
-            <Button w={"full"} colorScheme={"facebook"} borderRadius={0} my={7}>
+            <Button
+              w={"full"}
+              colorScheme={"facebook"}
+              borderRadius={0}
+              my={7}
+              onClick={handleLogin}
+            >
               SIGN IN
             </Button>
-            <Text  fontSize={'xs'} color='gray.600'>
+            <Text fontSize={"xs"} color="gray.600">
               This site is protected by reCAPTCHA and the Google Privacy Policy
               and Terms of Service apply.
             </Text>
           </ModalBody>
           <ModalFooter mt={10}>
-            <Text align={"center"} fontSize={'sm'} color='gray.600'>
+            <Text align={"center"} fontSize={"sm"} color="gray.600">
               Don't Have an Account?{" "}
             </Text>
             <Text
@@ -298,13 +784,24 @@ const AppNavbar = () => {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Input placeholder="Email Address" borderRadius={0} />
+            <Input
+              mb={3}
+              placeholder="Name"
+              borderRadius={0}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <Input
+              placeholder="Email Address"
+              borderRadius={0}
+              onChange={(e) => setEmail(e.target.value)}
+            />
             <InputGroup size="md" my={3}>
               <Input
                 pr="4.5rem"
                 type={show ? "text" : "password"}
                 placeholder="Enter password"
                 borderRadius={0}
+                onChange={(e) => setPassword(e.target.value)}
               />
               <InputRightElement width="4.5rem">
                 <Button
@@ -330,10 +827,11 @@ const AppNavbar = () => {
               color={"white"}
               borderRadius={0}
               my={5}
+              onClick={(e) => handleSignup(e.target.value)}
             >
               CREATE AN ACCOUNT
             </Button>
-            <Text fontSize={'xs'} color='gray.600'>
+            <Text fontSize={"xs"} color="gray.600">
               By clicking "Create an Account", you agree to our Terms of Use and
               Privacy Policy, including the Use of Cookies and the transfer of
               your personal information to the United States, a jurisdiction
@@ -341,8 +839,8 @@ const AppNavbar = () => {
               laws in your home country.
             </Text>
           </ModalBody>
-          <ModalFooter >
-            <Text align={"center"} fontSize={'sm'} color='gray.600'>
+          <ModalFooter>
+            <Text align={"center"} fontSize={"sm"} color="gray.600">
               Already Have an Account?{" "}
             </Text>
             <Text
@@ -351,8 +849,8 @@ const AppNavbar = () => {
               fontSize={15}
               cursor={"pointer"}
               onClick={loginModal}
-              fontWeight='bold'
-              color='facebook.600'
+              fontWeight="bold"
+              color="facebook.600"
             >
               {" "}
               Sign In
@@ -367,78 +865,100 @@ const AppNavbar = () => {
         onClose={onNavClose}
         finalFocusRef={btnRef}
       >
-        {/* <DrawerOverlay /> */}
         <DrawerContent mt={65}>
           <DrawerBody>
             <Stack py={3} px={2}>
-              <Box bg={"gray.400"} align={"center"}>
-                <Button
-                  colorScheme={"green"}
-                  m={2}
-                  borderRadius={0}
-                  w={"90%"}
-                  onClick={onMobileLoginOpen}
-                >
-                  SIGN IN
-                </Button>
+              <Box bg={"gray.100"} align={"center"}>
+                {user ? (
+                  <>
+                    <Stack spacing={0} fontWeight={"semibold"} p={2}>
+                      <Text>Hi! {user.displayName} Happy Shopping!</Text>
+                      <Text
+                        fontSize={14}
+                        onClick={handleSignout}
+                        cursor={"pointer"}
+                        color={"blue.400"}
+                        py={1}
+                      >
+                        Sign Out
+                      </Text>
+                    </Stack>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      colorScheme={"green"}
+                      m={2}
+                      borderRadius={0}
+                      w={"90%"}
+                      onClick={onMobileLoginOpen}
+                    >
+                      SIGN IN
+                    </Button>
+                  </>
+                )}
               </Box>
+              <Divider my={5} />
               <Stack bg={"white"} spacing={5}>
-                <HStack justify={"space-between"}>
-                  <Text>New</Text>
+                <HStack
+                  justify={"space-between"}
+                  onClick={() => navigate("/product")}
+                >
+                  <Text>Shop All</Text>
                   <Text>
                     <AiOutlineRight />
                   </Text>
                 </HStack>
-                <HStack justify={"space-between"}>
-                  <Text>Women</Text>
+                <HStack
+                  justify={"space-between"}
+                  onClick={() => navigate("/product")}
+                >
+                  <Text>Daily Blazer Series</Text>
                   <Text>
                     <AiOutlineRight />
                   </Text>
                 </HStack>
-                <HStack justify={"space-between"}>
-                  <Text>Men</Text>
+                <HStack
+                  justify={"space-between"}
+                  onClick={() => navigate("/product")}
+                >
+                  <Text>Kaela Collection</Text>
                   <Text>
                     <AiOutlineRight />
                   </Text>
                 </HStack>
-                <HStack justify={"space-between"}>
-                  <Text>Girls</Text>
+                <HStack
+                  justify={"space-between"}
+                  onClick={() => navigate("/product")}
+                >
+                  <Text>Minor Sale</Text>
                   <Text>
                     <AiOutlineRight />
                   </Text>
                 </HStack>
-                <HStack justify={"space-between"}>
-                  <Text>Boys</Text>
+                <HStack
+                  justify={"space-between"}
+                  onClick={() => navigate("/product")}
+                >
+                  <Text>Collection</Text>
                   <Text>
                     <AiOutlineRight />
                   </Text>
                 </HStack>
-                <HStack justify={"space-between"}>
-                  <Text>Accessories</Text>
+                <HStack
+                  justify={"space-between"}
+                  onClick={() => navigate("/product")}
+                >
+                  <Text>Journal</Text>
                   <Text>
                     <AiOutlineRight />
                   </Text>
                 </HStack>
-                <HStack justify={"space-between"}>
-                  <Text>Cashmere</Text>
-                  <Text>
-                    <AiOutlineRight />
-                  </Text>
-                </HStack>
-                <HStack justify={"space-between"}>
-                  <Text>Home</Text>
-                  <Text>
-                    <AiOutlineRight />
-                  </Text>
-                </HStack>
-                <HStack justify={"space-between"}>
-                  <Text>Stories</Text>
-                  <Text>
-                    <AiOutlineRight />
-                  </Text>
-                </HStack>
-                <HStack justify={"space-between"}>
-                  <Text>Sale</Text>
+                <HStack
+                  justify={"space-between"}
+                  onClick={() => navigate("/product")}
+                >
+                  <Text>Store Location</Text>
                   <Text>
                     <AiOutlineRight />
                   </Text>
@@ -465,12 +985,17 @@ const AppNavbar = () => {
           <DrawerHeader>SIGN IN</DrawerHeader>
           <DrawerCloseButton />
           <DrawerBody>
-            <Input placeholder="Email Address" borderRadius={0} />
+            <Input
+              placeholder="Email Address"
+              borderRadius={0}
+              onChange={(e) => setEmail(e.target.value)}
+            />
             <Input
               type={"password"}
               placeholder="Password"
               borderRadius={0}
               my={3}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <HStack justifyContent={"space-between"}>
               <Checkbox size={"sm"}>Remember me</Checkbox>
@@ -482,17 +1007,23 @@ const AppNavbar = () => {
                 Forgot Password?
               </Text>
             </HStack>
-            <Button w={"full"} colorScheme={"facebook"} borderRadius={0} my={7}>
+            <Button
+              w={"full"}
+              colorScheme={"facebook"}
+              borderRadius={0}
+              my={7}
+              onClick={(e) => handleLogin(e.target.value)}
+            >
               SIGN IN
             </Button>
-            <Text fontSize={'sm'} color='gray.600'>
+            <Text fontSize={"sm"} color="gray.600">
               This site is protected by reCAPTCHA and the Google Privacy Policy
               and Terms of Service apply.
             </Text>
             <Divider mt={8} />
 
             <HStack spacing={1} my={5} justifyContent={"center"}>
-              <Text fontSize={'sm'} color='gray.600' as={"span"} >
+              <Text fontSize={"sm"} color="gray.600" as={"span"}>
                 Don't Have an Account?{" "}
               </Text>
               <Text
@@ -518,18 +1049,28 @@ const AppNavbar = () => {
         onClose={onMobileSignupClose}
         finalFocusRef={btnRef}
       >
-        {/* <DrawerOverlay /> */}
         <DrawerContent>
-          <DrawerHeader>SIGN IN</DrawerHeader>
+          <DrawerHeader>SIGN UP</DrawerHeader>
           <DrawerCloseButton />
           <DrawerBody>
-            <Input placeholder="Email Address" borderRadius={0} />
+            <Input
+              mb={3}
+              placeholder="Name"
+              borderRadius={0}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <Input
+              placeholder="Email Address"
+              borderRadius={0}
+              onChange={(e) => setEmail(e.target.value)}
+            />
             <InputGroup size="md" my={3}>
               <Input
                 pr="4.5rem"
                 type={show ? "text" : "password"}
                 placeholder="Enter password"
                 borderRadius={0}
+                onChange={(e) => setPassword(e.target.value)}
               />
               <InputRightElement width="4.5rem">
                 <Button
@@ -555,6 +1096,7 @@ const AppNavbar = () => {
               color={"white"}
               borderRadius={0}
               my={5}
+              onClick={handleSignup}
             >
               CREATE AN ACCOUNT
             </Button>
@@ -567,7 +1109,9 @@ const AppNavbar = () => {
             </Text>
             <Divider mt={8} />
             <HStack my={5} justifyContent={"center"}>
-              <Text fontSize={'sm'} color='gray.600'>Already Have an Account? </Text>
+              <Text fontSize={"sm"} color="gray.600">
+                Already Have an Account?{" "}
+              </Text>
               <Text
                 as={"span"}
                 ml={1}

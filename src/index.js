@@ -8,18 +8,21 @@ import reportWebVitals from './reportWebVitals';
 import AppNavbar from './Components/AppNavbar';
 import AppFooter from './Components/AppFooter';
 import AppNavbarResponsive from './Components/AppNavbarResponsive';
+import { AuthProvider } from './Hooks';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <ChakraProvider>
-        <AppNavbar />
-        <Box>
-          <App />
-        </Box>
-       <AppFooter />
-      </ChakraProvider>
+    <AuthProvider>
+          <ChakraProvider>
+              <AppNavbar />
+                <Box>
+                  <App />
+                </Box>
+              <AppFooter />
+          </ChakraProvider>
+          </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

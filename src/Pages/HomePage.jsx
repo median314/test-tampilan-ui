@@ -16,12 +16,16 @@ import { MdOutlineFavorite, MdOutlineFavoriteBorder } from "react-icons/md";
 import AppHeader from "../Components/AppHeader";
 import { FiMail, FiPhone, FiTwitter } from "react-icons/fi";
 import AppFooter from "../Components/AppFooter";
-import { moreYouNeed } from "../dataArray.jsx/moreYouNeed";
-import { youAlsoLove } from "../dataArray.jsx/youAlsoLove";
+import { moreYouNeed } from "../DataArray/moreYouNeed";
+import { youAlsoLove } from "../DataArray/youAlsoLove";
+import { Link, useNavigate } from "react-router-dom";
+import useAuthentication from "../Hooks/CustomHooks/useAuthentication";
 
 const HomePage = () => {
   const width = window.innerWidth;
   const height = window.innerHeight;
+
+  const navigate = useNavigate();
 
   const moreStories = [
     {
@@ -74,11 +78,11 @@ const HomePage = () => {
   ];
 
   return (
-    <Stack>
+    <Stack w={width}>
       {/* <AppNavbar /> */}
       <Stack alignItems={"center"} justifyContent="center" mt={75}>
         <Stack alignItems={"center"} justifyContent="center">
-          <Box p={[3, null, 7]}>
+          <Box p={[3, null, 7]} w={"full"}>
             <Text align={"center"} color="gray.600" fontSize={14}>
               Have a question? We can help
             </Text>
@@ -86,7 +90,7 @@ const HomePage = () => {
 
           <Box pos={"relative"}>
             <Image
-              w={"100%"}
+              w={"full"}
               src="https://www.jcrew.com/brand_creative/homepage2023/02-Feb/2023feb_0214_hp_w_img0_text.jpg"
             />
             <Box pos={"absolute"} right={0} bottom={"10%"} w={"50%"}>
@@ -95,9 +99,9 @@ const HomePage = () => {
                 <Text fontWeight={"bold"} fontSize={[14, 27, 35]}>
                   Lookbook Is Here
                 </Text>
-                <Text>
-                  <a href="#">Shop The Look</a>
-                </Text>
+                <Link to={"/product"}>
+                  <Text>Shop The Look</Text>
+                </Link>
                 <Box w={"20%"} h={1} bg={"white"} borderRadius={"md"} mt={1} />
               </Box>
             </Box>
@@ -121,7 +125,6 @@ const HomePage = () => {
                 bottom={"30%"}
                 left={"20%"}
                 w={"60%"}
-                // border={"1px"}
                 alignItems={"center"}
               >
                 <Box align={"center"} color={"white"}>
@@ -129,14 +132,16 @@ const HomePage = () => {
                   <Text fontWeight={"bold"} fontSize={[12, 20, 25]}>
                     Introducing the Essential pant
                   </Text>
-                  <Text fontSize={[5, 10, 16]}>Shop all pants</Text>
-                  <Box
-                    w={"20%"}
-                    h={1}
-                    bg={"white"}
-                    borderRadius={"md"}
-                    mt={1}
-                  />
+                  <Link to={"/product"}>
+                    <Text fontSize={[5, 10, 16]}>Shop all pants</Text>
+                    <Box
+                      w={"20%"}
+                      h={1}
+                      bg={"white"}
+                      borderRadius={"md"}
+                      mt={1}
+                    />
+                  </Link>
                 </Box>
               </Box>
             </Box>
@@ -150,23 +155,22 @@ const HomePage = () => {
                 bottom={"30%"}
                 left={"20%"}
                 w={"60%"}
-                // border={"1px"}
                 alignItems={"center"}
               >
                 <Box align={"center"} color={"white"}>
                   <Text fontWeight={"bold"} fontSize={[15, 20, 35]}>
                     Have Forever Cashmere
                   </Text>
-                  <Text>
-                    <a href="#">Shop the new palette</a>
-                  </Text>
-                  <Box
-                    w={"20%"}
-                    h={1}
-                    bg={"white"}
-                    borderRadius={"md"}
-                    mt={1}
-                  />
+                  <Link to={"/product"}>
+                    <Text>Shop the new palette</Text>
+                    <Box
+                      w={"20%"}
+                      h={1}
+                      bg={"white"}
+                      borderRadius={"md"}
+                      mt={1}
+                    />
+                  </Link>
                 </Box>
               </Box>
             </Box>
@@ -180,23 +184,22 @@ const HomePage = () => {
                 bottom={"2%"}
                 left={"20%"}
                 w={"60%"}
-                border={"1px"}
                 alignItems={"center"}
               >
                 <Box align={"center"} color={"black"}>
                   <Text fontWeight={"bold"} fontSize={[15, 20, 35]}>
                     The Winona Loafer Lineup
                   </Text>
-                  <Text>
-                    <a href="#">Shop shoes</a>
-                  </Text>
-                  <Box
-                    w={"20%"}
-                    h={1}
-                    bg={"black"}
-                    borderRadius={"md"}
-                    mt={1}
-                  />
+                  <Link to={"/product"}>
+                    <Text>Shop shoes</Text>
+                    <Box
+                      w={"20%"}
+                      h={1}
+                      bg={"black"}
+                      borderRadius={"md"}
+                      mt={1}
+                    />
+                  </Link>
                 </Box>
               </Box>
             </Box>
@@ -210,23 +213,22 @@ const HomePage = () => {
                 bottom={"2%"}
                 left={"20%"}
                 w={"60%"}
-                border={"1px"}
                 alignItems={"center"}
               >
                 <Box align={"center"} color={"white"}>
                   <Text fontWeight={"bold"} fontSize={[15, 20, 35]}>
                     Swim time!
                   </Text>
-                  <Text>
-                    <a href="#">Shop the latest</a>
-                  </Text>
-                  <Box
-                    w={"20%"}
-                    h={1}
-                    bg={"white"}
-                    borderRadius={"md"}
-                    mt={1}
-                  />
+                  <Link to={"/product"}>
+                    <Text>Shop the latest</Text>
+                    <Box
+                      w={"20%"}
+                      h={1}
+                      bg={"white"}
+                      borderRadius={"md"}
+                      mt={1}
+                    />
+                  </Link>
                 </Box>
               </Box>
             </Box>
@@ -240,23 +242,24 @@ const HomePage = () => {
                 bottom={"5%"}
                 left={"20%"}
                 w={"60%"}
-                border={"1px"}
+                // border={"1px"}
                 alignItems={"center"}
               >
                 <Box align={"center"} color={"white"}>
                   <Text fontWeight={"bold"} fontSize={[15, 20, 35]}>
                     The Work Remix
                   </Text>
-                  <Text>
-                    <a href="#">Shop new arrivals</a>
-                  </Text>
-                  <Box
-                    w={"20%"}
-                    h={1}
-                    bg={"white"}
-                    borderRadius={"md"}
-                    mt={1}
-                  />
+                  <Link to={"/product"}>
+                    <Text>Shop new arrivals</Text>
+
+                    <Box
+                      w={"20%"}
+                      h={1}
+                      bg={"white"}
+                      borderRadius={"md"}
+                      mt={1}
+                    />
+                  </Link>
                 </Box>
               </Box>
             </Box>
@@ -270,23 +273,22 @@ const HomePage = () => {
                 bottom={"5%"}
                 left={"20%"}
                 w={"60%"}
-                border={"1px"}
                 alignItems={"center"}
               >
                 <Box align={"center"} color={"white"}>
                   <Text fontWeight={"bold"} fontSize={[15, 20, 35]}>
                     New covetable classics
                   </Text>
-                  <Text>
-                    <a href="#">Shop this month collection</a>
-                  </Text>
-                  <Box
-                    w={"20%"}
-                    h={1}
-                    bg={"white"}
-                    borderRadius={"md"}
-                    mt={1}
-                  />
+                  <Link to={"/product"}>
+                    <Text>Shop this month collection</Text>
+                    <Box
+                      w={"20%"}
+                      h={1}
+                      bg={"white"}
+                      borderRadius={"md"}
+                      mt={1}
+                    />
+                  </Link>
                 </Box>
               </Box>
             </Box>
@@ -312,6 +314,7 @@ const HomePage = () => {
                 // w={"20%"}
                 align={"center"}
                 fontSize={["sm", 14, 16]}
+                onClick={() => navigate("/product")}
               >
                 Shop Women
               </Button>
@@ -323,6 +326,7 @@ const HomePage = () => {
                 // w={"20%"}
                 align={"center"}
                 fontSize={["sm", 14, 16]}
+                onClick={() => navigate("/product")}
               >
                 Shop Men
               </Button>
@@ -334,6 +338,7 @@ const HomePage = () => {
                 // w={"20%"}
                 align={"center"}
                 fontSize={["sm", 14, 16]}
+                onClick={() => navigate("/product")}
               >
                 Shop Girls
               </Button>
@@ -345,6 +350,7 @@ const HomePage = () => {
                 // w={"20%"}
                 align={"center"}
                 fontSize={["sm", 14, 16]}
+                onClick={() => navigate("/product")}
               >
                 Shop Boys
               </Button>
@@ -423,11 +429,33 @@ const HomePage = () => {
           <Text align={"center"} mb={10} fontSize={30}>
             You'll Also Love
           </Text>
-          <Flex gap={2} overflowX={"auto"} flexWrap="nowrap">
-            <HStack pos={"relative"} overflowX={"auto"}>
+          <Flex
+            gap={2}
+            overflowX={"auto"}
+            flexWrap="nowrap"
+            css={{
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
+            }}
+          >
+            <HStack
+              pos={"relative"}
+              overflowX={"auto"}
+              css={{
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+              }}
+            >
               {youAlsoLove.map((x, i) => (
-                <>
-                  <Image w={"100%"} src={x.img} />
+                <Box key={i}>
+                  {/* <Link to={"/product"}> */}
+                  <Image
+                    onClick={() => navigate("/product")}
+                    w={"100%"}
+                    src={x.img}
+                  />
                   <Box
                     pos={"absolute"}
                     bottom={"80%"}
@@ -436,12 +464,13 @@ const HomePage = () => {
                     //   border={"1px"}
                     alignItems={"center"}
                   >
-                    <Box align={"center"}>
-                      <MdOutlineFavorite size={"20%"} />
-                      {/* <Box w={20} h={1} bg={"white"} borderRadius={"md"} mt={1} /> */}
-                    </Box>
+                    {/* <Box align={"center"}>
+                        <MdOutlineFavorite size={"20%"} />
+                        <Box w={20} h={1} bg={"white"} borderRadius={"md"} mt={1} />
+                      </Box> */}
                   </Box>
-                </>
+                  {/* </Link> */}
+                </Box>
               ))}
             </HStack>
           </Flex>
@@ -455,11 +484,26 @@ const HomePage = () => {
             </Text>
           </Box>
           <HStack spacing={10}>
-            <Flex flexWrap={"nowrap"} overflowX={"auto"} gap={2}>
-              {instagramProduct.map((x) => (
-                <>
-                  <Image src={x.img} />
-                </>
+            <Flex
+              flexWrap={"nowrap"}
+              overflowX={"auto"}
+              gap={2}
+              css={{
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+              }}
+            >
+              {instagramProduct.map((x, i) => (
+                <Box key={i}>
+                  {/* <Link to={"/product"}> */}
+                  <Image
+                    onClick={() => window.open("www.instagram.com", "_blank")}
+                    // onClick={() => navigate("www.instagram.com")}
+                    src={x.img}
+                  />
+                  {/* </Link> */}
+                </Box>
               ))}
             </Flex>
           </HStack>
@@ -476,19 +520,37 @@ const HomePage = () => {
           h={"100%"}
           mx={"3em"}
           overflow={["auto"]}
+          css={{
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
+          }}
           // px={[4, null, 20]}
         >
           <Stack spacing={5} px={3} py={4}>
-            <Flex flexDir={"column"} flexWrap={"nowrap"} overflow={"auto"}>
+            <Flex
+              flexDir={"column"}
+              flexWrap={"nowrap"}
+              overflow={"auto"}
+              css={{
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+              }}
+            >
               <HStack>
                 {moreYouNeed.map((cloth, i) => (
-                  <>
+                  <Box key={i}>
                     {/* <Flex flexDir={"column"}> */}
-                    <Image w={"100%"} src={cloth.img} />
+                    <Image
+                      onClick={() => navigate("/product")}
+                      w={"100%"}
+                      src={cloth.img}
+                    />
                     {/* <Text py={2}>{cloth.name}</Text> */}
                     <Box w={"80%"} h={"1%"} bgColor={"black"} />
                     {/* </Flex> */}
-                  </>
+                  </Box>
                 ))}
               </HStack>
             </Flex>

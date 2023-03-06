@@ -12,15 +12,19 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { MdOutlineFavorite } from "react-icons/md";
 import { Link } from "react-router-dom";
-import { shopStoriesMore } from "../dataArray.jsx/shopStoriesMore";
-import { womenClothes } from "../dataArray.jsx/WomenCategory";
+import { shopStoriesMore } from "../DataArray/shopStoriesMore";
+import useProduct from "../Hooks/CustomHooks/useProduct";
 
 const ProductPage = () => {
+  const width = window.innerWidth;
+
+  const products = useProduct();
+
   return (
-    <Box mt={75}>
+    <Box mt={75} w={width} justifyContent={"center"}>
       <Box py={5}>
         <Text align={"center"} fontSize={14}>
           Have a question? We can help
@@ -65,8 +69,8 @@ const ProductPage = () => {
         </Flex>
 
         <SimpleGrid columns={[2, null, 3]} spacing={[2, null, 10]}>
-          {womenClothes.map((x, i) => (
-            <Link key={i} to={`/product/${x.id}`}>
+          {products?.map((product, i) => (
+            <Link key={i} to={`/product/${product?.id}`}>
               <Box
                 pos={"relative"}
                 p={2}
@@ -76,24 +80,24 @@ const ProductPage = () => {
                   transform: "scale(1.05)",
                 }}
               >
-                <Image src={x.img} />
-                <Text py={3}>{x.name}</Text>
+                <Image src={product.image} />
+                <Text py={3}>{product?.title}</Text>
                 <Text fontWeight={"semibold"}>
                   IDR{" "}
                   {Intl.NumberFormat("en-ID", {
                     maximumSignificantDigits: 3,
-                  }).format(x.price)}
+                  }).format(product?.price)}
                 </Text>
                 <Stack
                   pos={"absolute"}
-                  bottom={["87%", null, "90%"]}
-                  left={["55%", null, "60%"]}
-                  w={"60%"}
+                  bottom={["87%", null, "88%"]}
+                  left={["55%", null, "62%"]}
+                  w={["60%", null, "45%"]}
                   //   border={"1px"}
                   alignItems={"center"}
                 >
                   <Box align={"center"}>
-                    <MdOutlineFavorite size={'20%'} />
+                    <MdOutlineFavorite size={"20%"} />
                     {/* <Box w={20} h={1} bg={"white"} borderRadius={"md"} mt={1} /> */}
                   </Box>
                 </Stack>
@@ -127,7 +131,7 @@ const ProductPage = () => {
           <Flex flexWrap={"nowrap"}>
             <HStack overflowX={"auto"}>
               {shopStoriesMore.map((x, i) => (
-                <>
+                <Box key={i}>
                   <Img
                     w={["80%", null, 350]}
                     h={["80%", null, 450]}
@@ -141,7 +145,7 @@ const ProductPage = () => {
                   >
                     {x.name}
                   </Text> */}
-                </>
+                </Box>
               ))}
             </HStack>
           </Flex>
@@ -151,7 +155,7 @@ const ProductPage = () => {
             align={"center"}
             fontWeight={"semibold"}
             fontSize={18}
-            color={"red"}
+            color={"maroon"}
           >
             Also Check Out Our Sale
           </Text>

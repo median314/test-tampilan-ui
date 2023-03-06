@@ -8,8 +8,9 @@ import {
   Input,
   Stack,
   Text,
+  useToast,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import {
   FaFacebook,
   FaInstagram,
@@ -22,8 +23,24 @@ import { FiMail, FiPhone, FiTwitter } from "react-icons/fi";
 const AppFooter = () => {
   const width = window.innerWidth;
 
+  const toast = useToast();
+
+  const [email, setEmail] = useState("");
+
+  const handleSubscribe = () => {
+    console.log(email, "ini mau subscribe");
+
+    toast({
+      position: "top",
+      title: "Wearing Klamby",
+      description: "You Subscribed",
+      status: "success",
+      duration: 1000,
+    });
+  };
+
   return (
-    <Stack>
+    <Stack minW={"full"}>
       <HStack
         justifyContent={"center"}
         spacing={4}
@@ -55,34 +72,56 @@ const AppFooter = () => {
       <Flex
         flexDir={["column-reverse", null, "row"]}
         bg={"#f0f1f2"}
-        w={width}
+        w={[width, null, width]}
         p={[7, null, 20]}
         justifyContent={"space-between"}
         gap={[5, null, 30]}
       >
-        <Box>
-          <Flex gap={[3, null, "3%"]} flexDir={["column", null, "row"]}>
-            <Flex gap={"6%"}>
-              <Box w={["50%", null, "50%"]}>
+        <Box w={["100%", null, "full"]}>
+          <Flex gap={[8, null, "2%"]} flexDir={["column", null, "row"]}>
+            <Flex gap={"10%"} w={["100", null, "40%"]}>
+              <Box w={["50%", null, "80%"]}>
                 <Heading pb={2} size={"md"}>
                   Help
                 </Heading>
-                <Text fontSize={'sm'} color='gray.600'>Costumer Service</Text>
-                <Text fontSize={'sm'} color='gray.600'>Track Order</Text>
-                <Text fontSize={'sm'} color='gray.600'>Return & Exchange</Text>
-                <Text fontSize={'sm'} color='gray.600'>Shipping</Text>
-                <Text fontSize={'sm'} color='gray.600'>International Orders</Text>
-                <Text fontSize={'sm'} color='gray.600'>Contact Us</Text>
+                <Text fontSize={"sm"} color="gray.600">
+                  Costumer Service
+                </Text>
+                <Text fontSize={"sm"} color="gray.600">
+                  Track Order
+                </Text>
+                <Text fontSize={"sm"} color="gray.600">
+                  Return & Exchange
+                </Text>
+                <Text fontSize={"sm"} color="gray.600">
+                  Shipping
+                </Text>
+                <Text fontSize={"sm"} color="gray.600">
+                  International Orders
+                </Text>
+                <Text fontSize={"sm"} color="gray.600">
+                  Contact Us
+                </Text>
               </Box>
-              <Box w={["50%", null, "50%"]}>
+              <Box w={["50%", null, "80%"]}>
                 <Heading pb={2} size={"md"}>
                   Quick Links
                 </Heading>
-                <Text fontSize={'sm'} color='gray.600'>Find a Store</Text>
-                <Text fontSize={'sm'} color='gray.600'>Size Charts</Text>
-                <Text fontSize={'sm'} color='gray.600'>Refer a Friend</Text>
-                <Text fontSize={'sm'} color='gray.600'>Offers & Promotions</Text>
-                <Text fontSize={'sm'} color='gray.600'>My Favorites</Text>
+                <Text fontSize={"sm"} color="gray.600">
+                  Find a Store
+                </Text>
+                <Text fontSize={"sm"} color="gray.600">
+                  Size Charts
+                </Text>
+                <Text fontSize={"sm"} color="gray.600">
+                  Refer a Friend
+                </Text>
+                <Text fontSize={"sm"} color="gray.600">
+                  Offers & Promotions
+                </Text>
+                <Text fontSize={"sm"} color="gray.600">
+                  My Favorites
+                </Text>
               </Box>
             </Flex>
 
@@ -90,18 +129,38 @@ const AppFooter = () => {
               <Heading pb={2} size={"md"}>
                 About J.Crew
               </Heading>
-              <Text fontSize={'sm'} color='gray.600'>Our Story</Text>
-              <Text fontSize={'sm'} color='gray.600'>Careers</Text>
-              <Text fontSize={'sm'} color='gray.600'>Social Responsibility</Text>
-              <Text fontSize={'sm'} color='gray.600'> California Transparency Act/Modern Slavery Act</Text>
-              <Text fontSize={'sm'} color='gray.600'> Investor Relations</Text>
-              <Text fontSize={'sm'} color='gray.600'>Terms of Use</Text>
-              <Text fontSize={'sm'} color='gray.600'>Privacy Policy</Text>
-              <Text fontSize={'sm'} color='gray.600'>California Do Not Sell My Personal Information</Text>
-              <Text fontSize={'sm'} color='gray.600'>Diversity, Equity and Inclusion at J.Crew Group</Text>
+              <Text fontSize={"sm"} color="gray.600">
+                Our Story
+              </Text>
+              <Text fontSize={"sm"} color="gray.600">
+                Careers
+              </Text>
+              <Text fontSize={"sm"} color="gray.600">
+                Social Responsibility
+              </Text>
+              <Text fontSize={"sm"} color="gray.600">
+                {" "}
+                California Transparency Act/Modern Slavery Act
+              </Text>
+              <Text fontSize={"sm"} color="gray.600">
+                {" "}
+                Investor Relations
+              </Text>
+              <Text fontSize={"sm"} color="gray.600">
+                Terms of Use
+              </Text>
+              <Text fontSize={"sm"} color="gray.600">
+                Privacy Policy
+              </Text>
+              <Text fontSize={"sm"} color="gray.600">
+                California Do Not Sell My Personal Information
+              </Text>
+              <Text fontSize={"sm"} color="gray.600">
+                Diversity, Equity and Inclusion at J.Crew Group
+              </Text>
             </Box>
           </Flex>
-          <Stack py={4}>
+          <Stack py={4} pt={"10%"}>
             <HStack>
               <FaInstagram size={30} />
               <FaFacebook size={30} />
@@ -111,7 +170,7 @@ const AppFooter = () => {
             </HStack>
 
             <Box>
-              <Text my={4} fontSize={'sm'} fontWeight='bold' color='gray.700'>
+              <Text my={4} fontSize={"sm"} fontWeight="bold" color="gray.700">
                 <a>Indonesia</a>
               </Text>
               <HStack>
@@ -135,14 +194,22 @@ const AppFooter = () => {
         <Box>
           <Stack>
             <Text fontWeight={"bold"}>Like Being First?</Text>
-            <Text fontSize={'sm'} color='gray.600'>Get can't-miss style news, before everybody else.</Text>
+            <Text fontSize={"sm"} color="gray.600">
+              Get can't-miss style news, before everybody else.
+            </Text>
             <HStack spacing={"none"}>
               <Input
                 borderColor={"black"}
                 borderRadius={"none"}
                 placeholder="Enter your email"
+                onChange={(e) => setEmail(e.target.value)}
               />
-              <Button bg={"black"} color={"white"} borderRadius={"none"}>
+              <Button
+                bg={"black"}
+                color={"white"}
+                borderRadius={"none"}
+                onClick={() => handleSubscribe()}
+              >
                 SIGN UP
               </Button>
             </HStack>
