@@ -27,27 +27,14 @@ const CheckoutPage = () => {
 
   const navigate = useNavigate();
 
-  const getOrdersData = async () => {
-    try {
-      const docRef = doc(db, "orders", user?.uid);
-      const docSnap = await getDoc(docRef);
+  const getCheckoutData = localStorage.getItem("checkout");
+  const checkoutData = JSON.parse(getCheckoutData);
 
-      if (docSnap.exists()) {
-        setOrder(docSnap.data());
-      } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-      }
-    } catch (error) {
-      console.log(error, "ini error");
-    }
-  };
+  if (getCheckoutData === null) {
+    window.location.href = "/";
+  }
 
-  useEffect(() => {
-    getOrdersData();
-
-    return () => {};
-  }, []);
+  const cartProduct = checkoutData?.cart;
 
   return (
     <Flex
@@ -108,52 +95,54 @@ const CheckoutPage = () => {
         >
           BACK TO CART
         </Button>
-        <Box>
-          {order?.data?.length > 0
-            ? order?.data?.map((x, i) => (
-                <Box key={i}>
-                  <Text fontWeight={"semibold"} fontSize={14} mb={2}>
-                    {x.title}
-                  </Text>
-                  <Flex gap={3}>
-                    <Image boxSize={130} src={x.image} />
-                    <Stack
-                      alignContent={"space-between"}
-                      fontSize={14}
-                      fontWeight={"semibold"}
-                    >
-                      <Text>Quantity: {x.quantity}</Text>
-                      <Text>Size: 34</Text>
-                      <Text>Color: White</Text>
-                      <Text>
-                        Price: IDR{" "}
-                        {Intl.NumberFormat("en-ID", {
-                          maximumSignificantDigits: 3,
-                        }).format(x.price)}
-                      </Text>
-                    </Stack>
-                  </Flex>
-                  <Stack>
-                    <Divider mt={5} />
-                    <HStack
-                      justifyContent={"space-between"}
-                      fontSize={16}
-                      fontWeight={"semibold"}
-                      py={4}
-                    >
-                      <Heading size={"md"}>Total Price</Heading>
-                      <Heading size={"md"}>
-                        IDR{" "}
-                        {Intl.NumberFormat("en-ID", {
-                          maximumSignificantDigits: 3,
-                        }).format(x.price)}
-                      </Heading>
-                    </HStack>
+        <Box pt={5} pb={2}>
+          {cartProduct?.length > 0 ? (
+            cartProduct?.map((x, i) => (
+              <Box key={i}>
+                <Text fontWeight={"semibold"} fontSize={14} mb={2}>
+                  {x.title}
+                </Text>
+                <Flex gap={3}>
+                  <Image boxSize={130} src={x.image} />
+                  <Stack
+                    alignContent={"space-between"}
+                    fontSize={14}
+                    fontWeight={"semibold"}
+                  >
+                    <Text>Quantity: {x.quantity}</Text>
+                    <Text>Size: 34</Text>
+                    <Text>Color: White</Text>
+                    <Text>
+                      Price: IDR{" "}
+                      {Intl.NumberFormat("en-ID", {
+                        maximumSignificantDigits: 3,
+                      }).format(x.price)}
+                    </Text>
                   </Stack>
-                </Box>
-              ))
-            : null}
+                </Flex>
+                <Stack>
+                  <Divider mt={5} />
+                </Stack>
+              </Box>
+            ))
+          ) : (
+            <>{navigate("/")}</>
+          )}
         </Box>
+
+        <HStack justifyContent={"space-between"} py={3}>
+          {checkoutData?.price ? (
+            <>
+              <Heading size={"md"}>Total Price</Heading>
+              <Heading size={"md"}>
+                IDR{" "}
+                {Intl.NumberFormat("en-ID", {
+                  maximumSignificantDigits: 3,
+                }).format(checkoutData.price)}
+              </Heading>
+            </>
+          ) : null}
+        </HStack>
       </Stack>
     </Flex>
   );

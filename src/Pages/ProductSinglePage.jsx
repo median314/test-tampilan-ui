@@ -6,7 +6,6 @@ import {
   Heading,
   HStack,
   Image,
-  List,
   ListItem,
   Select,
   SimpleGrid,
@@ -32,9 +31,20 @@ import AuthContext from "../Hooks/authContext";
 import { db } from "../Config/firebase";
 import { similiarItems } from "../DataArray/similiarItems";
 import { useAuthentication } from "../Hooks/CustomHooks/useAuthentication";
+import {
+  useAuthState,
+  useCartDispatch,
+  useCartState,
+  useWishlistDispatch,
+} from "../Hooks/context";
+import { addToCart, addToWishlist } from "../Hooks/actions";
 
 const ProductSinglePage = () => {
   const [product, setProduct] = useState([]);
+  const { cart } = useCartState();
+  const { user } = useAuthState();
+  const dispatch = useCartDispatch();
+  const dispatchWishlist = useWishlistDispatch();
 
   const params = useParams();
 
@@ -49,9 +59,7 @@ const ProductSinglePage = () => {
 
       if (docSnap.exists()) {
         setProduct(docSnap.data());
-        // console.log(product);
       } else {
-        // doc.data() will be undefined in this case
         console.log("No such document!");
       }
     } catch (error) {
@@ -59,31 +67,69 @@ const ProductSinglePage = () => {
     }
   };
 
-  const handleCart = async () => {
+  const handleCart = async (e) => {
+    console.log(cart);
+
     try {
       let cartData = {};
       cartData = { ...product };
 
-      const ref = doc(db, "cart", currentUser.uid);
-      await setDoc(
-        ref,
-        {
-          uid: currentUser.uid,
-          data: arrayUnion({ ...cartData, quantity: 1 }),
-          createdAt: new Date(),
-        },
-        { merge: true }
-      );
+      const getCart = localStorage.getItem("cart");
 
-      cartData = {};
+      if (getCart === null || cart.cart?.length === 0) {
+        let payloadCart = {
+          cart: [{ ...e, quantity: 1 }],
+        };
 
-      toast({
-        position: "top",
-        title: "Wearing Klamby",
-        description: "Product added to your cart",
-        status: "success",
-        duration: 10000,
-      });
+        addToCart(dispatch, payloadCart);
+      }
+      if (getCart !== null || cart.cart?.length > 0) {
+        console.log(getCart);
+        const cartArr = JSON.parse(getCart);
+        const newArr = cartArr.cart;
+
+        const find = newArr.findIndex((x) => x.title === e.title);
+        console.log(find, "ini result find");
+
+        if (find >= 0) {
+          toast({
+            position: "top",
+            title: "Wearing Klamby",
+            description: "This product is already added to your cart",
+            status: "info",
+            duration: 10000,
+          });
+        } else {
+          newArr.push({ ...e, quantity: 1 });
+
+          let payloadCart = {
+            cart: [...newArr],
+          };
+
+          addToCart(dispatch, payloadCart);
+
+          const ref = doc(db, "cart", currentUser.uid);
+          await setDoc(
+            ref,
+            {
+              uid: currentUser.uid,
+              data: arrayUnion({ ...cartData, quantity: 1 }),
+              createdAt: new Date(),
+            },
+            { merge: true }
+          );
+
+          cartData = {};
+
+          toast({
+            position: "top",
+            title: "Wearing Klamby",
+            description: "Product added to your cart",
+            status: "success",
+            duration: 10000,
+          });
+        }
+      }
     } catch (error) {
       console.log(error, "ini error");
 
@@ -93,6 +139,80 @@ const ProductSinglePage = () => {
         description: `Failed to add to cart ${error.message}`,
         status: "error",
         duration: 1000,
+      });
+    }
+  };
+
+  const handleSaved = async (data) => {
+    let savedData = {};
+    savedData = { ...data };
+
+    console.log(savedData, "ini wishlist");
+
+    const getWishlist = localStorage.getItem("wishlist");
+    const wishlistArr = JSON.parse(getWishlist);
+
+    console.log(getWishlist);
+    console.log(wishlistArr);
+
+    try {
+      if (wishlistArr === null || getWishlist === null) {
+        let payloadWishlist = {
+          wishlist: [{ ...data }],
+        };
+
+        addToWishlist(dispatchWishlist, payloadWishlist);
+      }
+      if (wishlistArr !== null || wishlistArr.length > 0) {
+        const newWishlistArr = wishlistArr.wishlist;
+        console.log(newWishlistArr, "ini wishlist");
+
+        const find = newWishlistArr.findIndex((x) => x.title === data.title);
+        console.log(find, "ini result find");
+
+        if (find >= 0) {
+          toast({
+            position: "top",
+            title: "Wearing Klamby",
+            description: "This product is already added to your wishlist",
+            status: "info",
+            duration: 10000,
+          });
+        } else {
+          newWishlistArr.push(savedData);
+
+          let payloadWishlist = {
+            wishlist: newWishlistArr,
+          };
+
+          addToWishlist(dispatchWishlist, payloadWishlist);
+
+          //to firebase
+          const ref = doc(db, "wishlist", user.uid);
+          await setDoc(
+            ref,
+            {
+              uid: user.uid,
+              data: arrayUnion(savedData),
+              createdAt: new Date(),
+            },
+            { merge: true }
+          );
+          savedData = {};
+          toast({
+            position: "top",
+            title: "Wearing Klamby",
+            description: "Berhasil mennyimpan product.",
+            status: "success",
+          });
+        }
+      }
+    } catch (error) {
+      toast({
+        position: "top",
+        title: "Wearing Klamby",
+        description: error.message,
+        status: "error",
       });
     }
   };
@@ -352,7 +472,7 @@ const ProductSinglePage = () => {
                           borderRadius={0}
                           my={1}
                           w={"full"}
-                          onClick={() => handleCart()}
+                          onClick={() => handleCart(product)}
                         >
                           ADD TO BAG
                         </Button>
@@ -361,6 +481,7 @@ const ProductSinglePage = () => {
                           borderRadius={0}
                           bg={"transparent"}
                           p={2}
+                          onClick={() => handleSaved(product)}
                         >
                           <FaHeart size={25} />
                         </Button>

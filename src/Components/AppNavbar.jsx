@@ -19,12 +19,7 @@ import {
   Stack,
   Text,
   useDisclosure,
-  IconButton,
-  CloseButton,
   Flex,
-  Icon,
-  useColorModeValue,
-  Link,
   Drawer,
   DrawerContent,
   BoxProps,
@@ -55,21 +50,24 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { FaSearch, FaUser } from "react-icons/fa";
-import AuthProvider from "../Hooks/AuthProvider";
-import { onAuthStateChanged, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  updateProfile,
+} from "firebase/auth";
 import { auth, db } from "../Config/firebase";
 import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import AuthContext from "../Hooks/authContext";
 import store from "store";
-// import { useAuthDispatch, useAuthState } from "../Hooks/Context";
-import { LoginUser, logout, useAuthDispatch, useAuthState } from "../Hooks";
-import { signUp } from "../Hooks/actions";
+import {
+  LoginUser,
+  logout,
+  useAuthDispatch,
+  useAuthState,
+  useCartState,
+} from "../Hooks";
 
 const AppNavbar = () => {
-  // const [currentUser, setCurrentUser] = useState();
-  // const currentUser = useAuthentication();
-  // const cart = useCart();
-
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -77,13 +75,12 @@ const AppNavbar = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [show, setShow] = useState(false);
-  const [cart, setCart] = useState();
   const handleShowPassword = () => setShow(!show);
 
   const dispatch = useAuthDispatch();
   const { loading, user, errorMessage } = useAuthState();
+  const { cart } = useCartState();
 
-  // const { signUp, signOut, cart, currentUser } = useContext();
   const navigate = useNavigate();
   const btnRef = useRef();
   const toast = useToast();
@@ -98,12 +95,6 @@ const AppNavbar = () => {
     window.addEventListener("resize", handleResize);
     handleResize();
   }, []);
-
-  const {
-    isOpen: isPopoverOpen,
-    onToggle,
-    onClose: onPopoverClose,
-  } = useDisclosure();
 
   const {
     isOpen: isLoginOpen,
@@ -158,111 +149,84 @@ const AppNavbar = () => {
     console.log(rememberMe, "ini checkbox");
   };
 
-  //signUpFunction
-  const handleSignup = async (e) => {
-    let payload = {
-      email,
-      password,
-      name,
-    };
+  const handleSignup = async () => {
+    const displayName = name;
+    if (email === "" && password === "" && name === "") {
+      toast({
+        title: "Something Wrong",
+        description: "check your email, password, data",
+        status: "error",
+        duration: 10000,
+        isClosable: true,
+        position: "top",
+      });
+    }
 
-    try {
-      let response = await signUp(dispatch, payload);
+    if (email !== "" && password !== "" && name !== "") {
+      try {
+        console.log(email, name, password, "ini data");
+        createUserWithEmailAndPassword(auth, email, password)
+          .then(async (userCredential) => {
+            await updateProfile(auth.currentUser, {
+              displayName,
+            });
 
-      if (
-        response !== undefined &&
-        name !== "" &&
-        email !== "" &&
-        password !== ""
-      ) {
+            const user = auth.currentUser;
+            console.log(auth.currentUser);
+
+            await setDoc(doc(db, "users", user.uid), {
+              name: displayName,
+              email: user.email,
+              uid_user: user.uid,
+              createdAt: new Date(),
+            });
+
+            toast({
+              title: "Signup Success",
+              description: `Please Login to continue shopping`,
+              status: "success",
+              duration: 10000,
+              isClosable: true,
+              position: "top",
+            });
+
+            window.location.reload();
+          })
+
+          .catch((error) => {
+            console.log(error, "ini error");
+            toast({
+              title: "Something Wrong",
+              description: `It looks like you don't have account in your browser, please signup and reload this page / ${error.message}`,
+              status: "error",
+              duration: 10000,
+              isClosable: true,
+              position: "top",
+            });
+          });
+      } catch (error) {
+        console.log(errorMessage);
+
         toast({
-          position: "top",
-          title: "Wearing Klamby",
-          description: "Signup Success",
-          status: "success",
-          duration: 2000,
-        });
-      } else if (response === undefined) {
-        toast({
-          position: "top",
-          title: "Wearing Klamby",
-          description:
-            "Gagal Login, pastikan Email/Password yang dimasukkan benar ",
+          title: "Something Wrong",
+          description: error,
           status: "error",
-          duration: 2000,
+          duration: 10000,
+          isClosable: true,
+          position: "top",
         });
       }
-
-      // if (name !== "" && email !== "" && password !== "") {
-
-      // .then(async (userCredential) => {
-      //   await updateProfile(auth.currentUser, {
-      //     displayName: payload,
-      //   });
-
-      //   const user = userCredential.user;
-      //   await setDoc(doc(db, "users", user.uid), {
-      //     name: name,
-      //     email: user.email,
-      //     uid_user: user.uid,
-      //     createdAt: new Date(),
-      //   });
-
-      //   toast({
-      //     title: "Wearing Klamby",
-      //     description: `User created with id ${user.uid}`,
-      //     status: "success",
-      //     duration: 2000,
-      //   });
-
-      //   onMobileSignupClose();
-      // })
-
-      // .catch((error) => {
-      //   toast({
-      //     title: "Wearing Klamby",
-      //     description: `User not created, ${error.message}`,
-      //     status: "error",
-      //     duration: 2000,
-      //   });
-      // });
-    } catch (error) {
-      console.log(error, "ini error");
+    } else {
+      console.log(errorMessage);
+      toast({
+        title: "Something Wrong",
+        description: "check your data",
+        status: "error",
+        duration: 10000,
+        isClosable: true,
+        position: "top",
+      });
     }
-    //   const displayName = name;
-    //   signUp(email, password)
-    //     .then(async (userCredential) => {
-    //       await updateProfile(auth.currentUser, {
-    //         displayName,
-    //         // photoURL,
-    //       });
-
-    //       const user = userCredential.user;
-    //       await setDoc(doc(db, "users", user.uid), {
-    //         name: name,
-    //         email: user.email,
-    //         uid_user: user.uid,
-    //         createdAt: new Date(),
-    //       });
-
-    //       toast({
-    //         title: "Wearing Klamby",
-    //         description: `User created with id ${user.uid}`,
-    //         status: "success",
-    //         duration: 1000,
-    //       });
-
-    //       onMobileSignupClose();
-    //       navigate("/");
-    //     })
-    //     .catch((error) => {
-    //       toast({
-    //         title: "Wearing Klamby",
-    //         description: `User not created, ${error.message}`,
-    //         status: "error",
-    //         duration: 1000,
-    //       });
-    //     });
   };
 
   //loginFunction
@@ -284,7 +248,6 @@ const AppNavbar = () => {
           duration: 2000,
         });
       } else if (response.user.uid !== undefined) {
-        // login(email, password);
         window.location.href = "/";
 
         toast({
@@ -294,8 +257,6 @@ const AppNavbar = () => {
           status: "success",
           duration: 2000,
         });
-
-        // navigate("/");
       }
     } catch (error) {
       toast({
@@ -307,28 +268,6 @@ const AppNavbar = () => {
         duration: 2000,
       });
     }
-    // if (email !== "" && password !== "") {
-    //   login(email, password);
-
-    //   toast({
-    //     title: "Wearing Klamby",
-    //     description: "Login Success",
-    //     status: "success",
-    //     duration: 1000,
-    //   });
-
-    //   navigate("/");
-
-    //   console.log(currentUser);
-    // } else {
-    //   toast({
-    //     title: "Wearing Klamby",
-    //     description:
-    //       "Gagal Login, pastikan Email/Password yang dimasukkan benar ",
-    //     status: "error",
-    //     duration: 1000,
-    //   });
-    // }
   };
 
   //signout function
@@ -344,34 +283,11 @@ const AppNavbar = () => {
         duration: 1000,
       });
 
-      window.location.href("/");
+      window.location.href = "/";
     } catch (error) {
       console.log(error, "ini error");
     }
   };
-
-  const getCart = async () => {
-    if (user) {
-      try {
-        onSnapshot(doc(db, "cart", user?.uid), (doc) => {
-          setCart(doc.data());
-        });
-      } catch (error) {
-        console.log(error, "ini error");
-      }
-
-      return cart;
-    } else {
-      console.log("youre not login");
-      window.location.href("/");
-    }
-  };
-
-  useEffect(() => {
-    getCart();
-
-    return () => {};
-  }, [user]);
 
   return (
     <Box
@@ -394,7 +310,6 @@ const AppNavbar = () => {
               </Box>
               <HStack onClick={setShowSearch}>
                 <FiSearch size={20} color="gray.300" />
-                {/* <Input size={"sm"} placeholder="Search" /> */}
               </HStack>
             </HStack>
             <Stack onClick={() => navigate("/")} cursor="pointer">
@@ -410,7 +325,7 @@ const AppNavbar = () => {
               spacing={-0.5}
             >
               <SlHandbag size={20} />
-              {cart?.data?.length > 0 ? (
+              {cart?.cart?.length > 0 ? (
                 <Box
                   pos={"absolute"}
                   bg={"blue.500"}
@@ -423,7 +338,7 @@ const AppNavbar = () => {
                   fontSize={[12, null, 10]}
                   align={"center"}
                 >
-                  <Text fontWeight={"semibold"}>{cart?.data?.length}</Text>
+                  <Text fontWeight={"semibold"}>{cart?.cart?.length}</Text>
                 </Box>
               ) : null}
             </HStack>
@@ -685,7 +600,7 @@ const AppNavbar = () => {
             )}
             <Stack onClick={() => navigate("/cart")} cursor="pointer">
               <SlHandbag size={20} />
-              {cart?.data?.length > 0 ? (
+              {cart?.cart?.length > 0 ? (
                 <Box
                   pos={"absolute"}
                   bg={"blue.500"}
@@ -698,7 +613,7 @@ const AppNavbar = () => {
                   fontSize={[12, null, 10]}
                   align={"center"}
                 >
-                  <Text fontWeight={"semibold"}>{cart?.data?.length}</Text>
+                  <Text fontWeight={"semibold"}>{cart?.cart?.length}</Text>
                 </Box>
               ) : null}
             </Stack>
@@ -792,6 +707,7 @@ const AppNavbar = () => {
             />
             <Input
               placeholder="Email Address"
+              type={"email"}
               borderRadius={0}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -827,7 +743,7 @@ const AppNavbar = () => {
               color={"white"}
               borderRadius={0}
               my={5}
-              onClick={(e) => handleSignup(e.target.value)}
+              onClick={() => handleSignup()}
             >
               CREATE AN ACCOUNT
             </Button>
@@ -987,6 +903,7 @@ const AppNavbar = () => {
           <DrawerBody>
             <Input
               placeholder="Email Address"
+              type={"email"}
               borderRadius={0}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -1061,6 +978,7 @@ const AppNavbar = () => {
             />
             <Input
               placeholder="Email Address"
+              type={"email"}
               borderRadius={0}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -1096,7 +1014,7 @@ const AppNavbar = () => {
               color={"white"}
               borderRadius={0}
               my={5}
-              onClick={handleSignup}
+              onClick={(e) => handleSignup(e.target.value)}
             >
               CREATE AN ACCOUNT
             </Button>

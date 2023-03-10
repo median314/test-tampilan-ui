@@ -9,12 +9,16 @@ import AppNavbar from './Components/AppNavbar';
 import AppFooter from './Components/AppFooter';
 import AppNavbarResponsive from './Components/AppNavbarResponsive';
 import { AuthProvider } from './Hooks';
+import { AuthCartProvider, AuthWishlistProvider } from './Hooks/context';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
     <AuthProvider>
+      <AuthCartProvider>
+        <AuthWishlistProvider>
+
           <ChakraProvider>
               <AppNavbar />
                 <Box>
@@ -22,6 +26,9 @@ root.render(
                 </Box>
               <AppFooter />
           </ChakraProvider>
+        </AuthWishlistProvider>
+
+          </AuthCartProvider>
           </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>

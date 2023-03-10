@@ -1,17 +1,12 @@
 let user = localStorage.getItem("user")
   ? JSON.parse(localStorage.getItem("user"))
   : "";
-let email = localStorage.getItem("email")
-  ? JSON.parse(localStorage.getItem("email"))
+
+let cart = localStorage.getItem("cart")
+  ? JSON.parse(localStorage.getItem("cart"))
   : "";
-let name = localStorage.getItem("name")
-  ? JSON.parse(localStorage.getItem("name"))
-  : "";
-let password = localStorage.getItem("")
-  ? JSON.parse(localStorage.getItem(""))
-  : "";
-let uid = localStorage.getItem("")
-  ? JSON.parse(localStorage.getItem(""))
+let wishlist = localStorage.getItem("wishlist")
+  ? JSON.parse(localStorage.getItem("wishlist"))
   : "";
 
 export const initialState = {
@@ -19,10 +14,8 @@ export const initialState = {
   errorMessage: null,
 
   user: "" || user,
-  email: "" || email,
-  password: "" || password,
-  name: "" || name,
-  uid: "" || uid,
+  cart: "" || cart,
+  wishlist: "" || wishlist
 };
 
 export const AuthReducer = (initialState, action) => {
@@ -64,9 +57,6 @@ export const AuthReducer = (initialState, action) => {
       return {
         ...initialState,
         user: action.payload.user,
-        name: action.payload.name,
-        email: action.payload.email,
-        uid: action.payload.uid,
         loading: true
     };
     case "SIGNUP_ERROR":
@@ -75,6 +65,36 @@ export const AuthReducer = (initialState, action) => {
         loading: false,
         errorMessage: action.error,
     };
+    case "REQUEST_ADD_CART":
+      return{
+        ...initialState,
+        loading: true
+      };
+    case "ADD_CART":
+      return{
+        ...initialState,
+        cart: action.cart
+      };
+    case "ADD_CART_SUCCESS":
+      return{
+        ...initialState,
+        loading: true
+      }
+    case "ADD_BUTTON":
+      return{
+        ...initialState,
+        cart: action.payload.quantity
+      }
+    case "SUBTRACT_BUTTON":
+      return{
+        ...initialState,
+        cart: action.payload.quantity
+      }
+    case "ADD_WISHLIST":
+      return{
+        ...initialState,
+        wishlist: action
+      }
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }

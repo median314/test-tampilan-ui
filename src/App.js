@@ -1,6 +1,7 @@
-import { Box } from "@chakra-ui/react";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
+import BlogPost from "./Pages/BlogPost";
+import BlogPostSingle from "./Pages/BlogPostSingle";
 import CartPage from "./Pages/CartPage";
 import CheckoutPage from "./Pages/CheckoutPage";
 import HomePage from "./Pages/HomePage";
@@ -20,6 +21,8 @@ function App() {
       <Route path="/cart" element={<CartPage />} />
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/user/detail" element={<UserDetails />} />
+      <Route path="/post" element={<BlogPost />} />
+      <Route path="/post/id" element={<BlogPostSingle />} />
     </Routes>
     </>
   );

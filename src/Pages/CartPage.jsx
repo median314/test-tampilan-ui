@@ -9,39 +9,33 @@ import {
   Input,
   Spacer,
   Stack,
-  Table,
-  TableContainer,
-  Td,
   Text,
-  Th,
-  Thead,
   useToast,
 } from "@chakra-ui/react";
-import {
-  addDoc,
-  arrayRemove,
-  arrayUnion,
-  collection,
-  doc,
-  onSnapshot,
-  setDoc,
-} from "firebase/firestore";
+import { arrayRemove, arrayUnion, doc, setDoc } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
-import { auth, db } from "../Config/firebase";
+import { db } from "../Config/firebase";
 import _ from "lodash";
 import { useNavigate } from "react-router-dom";
-import { useAuthentication } from "../Hooks/CustomHooks/useAuthentication";
-import { useAuthState } from "../Hooks/context";
+
+import {
+  useAuthState,
+  useCartState,
+  useWishlistDispatch,
+  useWishlistState,
+  useCartDispatch,
+} from "../Hooks/context";
+import { addToWishlist, addToCart } from "../Hooks";
 
 const CartPage = () => {
-  const [cart, setCart] = useState();
-  const [saved, setSaved] = useState();
   const [totalPrice, setTotalPrice] = useState(0);
   const [isMobile, setIsMobile] = useState();
 
-  // const cart = useCart();
-  const currentUser = useAuthentication();
+  const { cart } = useCartState();
   const { user } = useAuthState();
+  const { wishlist } = useWishlistState();
+  const dispatchWishlist = useWishlistDispatch();
+  const cartDispatch = useCartDispatch();
 
   const toast = useToast();
   const navigate = useNavigate();
@@ -63,7 +57,6 @@ const CartPage = () => {
 
       toast({
         position: "top",
-        status: "Wearing Klamby",
         description: "Please Login or Create Account First",
         status: "error",
         duration: 2000,
@@ -71,71 +64,94 @@ const CartPage = () => {
     }
   }, []);
 
-  const getCart = async () => {
-    try {
-      onSnapshot(doc(db, "cart", user?.uid), (doc) => {
-        setCart(doc.data());
-      });
-    } catch (error) {
-      console.log(error, "ini error");
-    }
-
-    return cart;
-  };
-
-  const getSavedProduct = async () => {
-    try {
-      onSnapshot(doc(db, "wishlist", user?.uid), (doc) => {
-        setSaved(doc.data());
-      });
-    } catch (error) {
-      console.log(error, "ini error");
-    }
-
-    return cart;
-  };
+  console.log(cart, "ini cart");
 
   const countTotal = () => {
-    // console.log(_.isEmpty(cartList));
+    console.log(_.isEmpty(cart?.cart));
     if (_.isEmpty(cart)) {
       setTotalPrice(0);
     } else {
       let total = 0;
-      cart?.data?.map((x) => (total += x?.price * x?.quantity));
+      cart?.cart?.map((x) => (total += x?.price * x?.quantity));
       setTotalPrice(total);
     }
   };
 
-  const handleFirebase = async (data) => {
+  const handleFirebase = async () => {
+    const qty = localStorage.getItem("cart");
+    const cartArr = JSON.parse(qty);
+
+    console.log(cartArr);
+
     try {
-      await setDoc(doc(db, "cart", user.uid), data);
+      await setDoc(doc(db, "cart", user.uid), {
+        createdAt: new Date(),
+        data: cartArr,
+      });
     } catch (error) {
       console.log(error.message, "errorin setdoc cart uid");
     }
   };
 
   const handleAdd = async (i) => {
-    // const data = cartList;
-    const newQty = cart.data[i].quantity + 1;
-    cart.data[i].quantity = newQty;
-    await handleFirebase(cart);
+    const qty = localStorage.getItem("cart");
+    const cartArr = JSON.parse(qty);
+    console.log(cartArr.cart[i].quantity, "ini yg lama");
+
+    const newQty = cartArr?.cart[i].quantity + 1;
+    cartArr.cart[i].quantity = newQty;
+
+    console.log(cartArr.cart[i].quantity, "ini yg baru");
+    console.log(cartArr);
+
+    addToCart(cartDispatch, cartArr);
+
+    //to firebase
+    await handleFirebase();
   };
 
   const handleMinus = async (i) => {
-    // const data = cartList;
-    if (cart.data[i].quantity - 1 > 0) {
-      const newQty = cart.data[i].quantity - 1;
-      cart.data[i].quantity = newQty;
+    const qty = localStorage.getItem("cart");
+    const cartArr = JSON.parse(qty);
+
+    console.log(cart, "ini yang lama");
+
+    if (cartArr.cart[i].quantity - 1 > 0) {
+      const newQty = cartArr.cart[i].quantity - 1;
+      cartArr.cart[i].quantity = newQty;
+
+      console.log(cartArr, "ini yg baru");
+      console.log(cartArr.cart[i].quantity, "ini qty");
+
+      addToCart(cartDispatch, cartArr);
     }
-    await handleFirebase(cart);
+    await handleFirebase();
   };
 
   const handleRemove = async (data) => {
     let cartData = {};
     cartData = { ...data };
-
     console.log(data, "ini isinya");
+
+    const getCart = localStorage.getItem("cart");
+    const cartArr = JSON.parse(getCart);
+
+    console.log(cartArr.cart, "ini isinya cart");
+
     try {
+      if (cart?.cart?.length > 0) {
+        const itemChosen = cartArr.cart?.findIndex(
+          (x) => x.title === data.title
+        );
+        console.log(itemChosen);
+
+        cartArr.cart?.splice(itemChosen, 1);
+
+        console.log(cartArr);
+
+        addToCart(cartDispatch, cartArr);
+      }
+
       const ref = doc(db, "cart", user.uid);
       await setDoc(
         ref,
@@ -168,12 +184,44 @@ const CartPage = () => {
     savedData = { ...data };
 
     console.log(savedData, "ini wishlist");
+
+    const getWishlist = localStorage.getItem("wishlist");
+    const wishlistArr = JSON.parse(getWishlist);
+
+    console.log(wishlistArr);
+
     try {
-      const ref = doc(db, "wishlist", currentUser.uid);
+      if (wishlistArr === null || wishlist.wishlist.length === 0) {
+        let payloadWishlist = {
+          wishlist: [{ ...data }],
+        };
+
+        console.log(payloadWishlist);
+        addToWishlist(dispatchWishlist, payloadWishlist);
+      }
+      if (wishlistArr !== null || wishlistArr.length > 0) {
+        const newWishlistArr = wishlistArr.wishlist;
+        console.log(newWishlistArr, "ini wishlist");
+
+        newWishlistArr.push(savedData);
+
+        console.log(newWishlistArr);
+
+        let payloadWishlist = {
+          wishlist: newWishlistArr,
+        };
+
+        addToWishlist(dispatchWishlist, payloadWishlist);
+      }
+
+      handleRemove(data);
+
+      //to firebase
+      const ref = doc(db, "wishlist", user.uid);
       await setDoc(
         ref,
         {
-          uid: currentUser.uid,
+          uid: user.uid,
           data: arrayUnion(savedData),
           createdAt: new Date(),
         },
@@ -186,7 +234,6 @@ const CartPage = () => {
         description: "Berhasil mennyimpan product.",
         status: "success",
       });
-      handleRemove(data);
     } catch (error) {
       toast({
         position: "top",
@@ -201,13 +248,31 @@ const CartPage = () => {
     let savedData = {};
     savedData = { ...data };
 
-    console.log(savedData, "ini wishlist");
+    const getWishlist = localStorage.getItem("wishlist");
+    const wishlistArr = JSON.parse(getWishlist);
+
+    const newArr = wishlistArr?.wishlist;
     try {
-      const ref = doc(db, "wishlist", currentUser.uid);
+      if (newArr?.length > 0) {
+        const itemChosen = newArr?.findIndex((x) => x.title === data.title);
+
+        newArr.splice(itemChosen, 1);
+
+        console.log(newArr);
+
+        let payloadWishlist = {
+          wishlist: newArr,
+        };
+
+        addToWishlist(dispatchWishlist, payloadWishlist);
+      }
+
+      //to firebase
+      const ref = doc(db, "wishlist", user.uid);
       await setDoc(
         ref,
         {
-          uid: currentUser.uid,
+          uid: user.uid,
           data: arrayRemove(savedData),
           createdAt: new Date(),
         },
@@ -217,7 +282,7 @@ const CartPage = () => {
       toast({
         position: "top",
         title: "Wearing Klamby",
-        description: "Berhasil mennyimpan product.",
+        description: "Berhasil menghapus product dari wishlist.",
         status: "success",
       });
     } catch (error) {
@@ -233,13 +298,44 @@ const CartPage = () => {
   const handleCart = async (item) => {
     let savedProduct = {};
     savedProduct = { ...item };
+
     console.log(savedProduct, "ini save product");
     try {
-      const ref = doc(db, "cart", currentUser.uid);
+      const getCart = localStorage.getItem("cart");
+      const cartArr = JSON.parse(getCart);
+
+      console.log(cartArr, "ini save product");
+
+      if (cartArr === null || cart.cart.cart?.length === 0) {
+        let payloadCart = {
+          cart: [{ ...item, quantity: 1 }],
+        };
+
+        console.log(payloadCart);
+
+        addToCart(cartDispatch, payloadCart);
+      }
+      if (cartArr !== null || cart.cart.cart?.length > 0) {
+        console.log(cartArr);
+        const newArr = cartArr.cart;
+        console.log(newArr, "ini cartArr");
+
+        newArr.push({ ...item, quantity: 1 });
+
+        console.log(newArr, "ini cartArr");
+
+        let payloadCart = {
+          cart: newArr,
+        };
+
+        addToCart(cartDispatch, payloadCart);
+      }
+
+      const ref = doc(db, "cart", user.uid);
       await setDoc(
         ref,
         {
-          uid: currentUser.uid,
+          uid: user.uid,
           data: arrayUnion(savedProduct),
           createdAt: new Date(),
         },
@@ -271,17 +367,22 @@ const CartPage = () => {
   };
 
   const handleCheckout = async () => {
+    const getItems = localStorage.getItem("cart");
+    const checkoutItems = JSON.parse(getItems);
+    console.log(checkoutItems);
+
     const checkout = {
-      ...cart,
+      ...checkoutItems,
       price: totalPrice,
-      user_uid: auth.currentUser.uid,
+      user_uid: user.uid,
     };
     console.log(checkout, "ini yang mau dicheckout");
 
-    try {
-      const order = await setDoc(doc(db, "orders", currentUser.uid), checkout);
-      console.log(`doc added with id`);
+    localStorage.setItem("checkout", JSON.stringify(checkout));
 
+    try {
+      await setDoc(doc(db, "orders", user.uid), checkout);
+      console.log(`doc added with id`);
       toast({
         position: "top",
         title: "Wearing Klamby",
@@ -289,28 +390,18 @@ const CartPage = () => {
         status: "success",
         duration: 1000,
       });
-
       navigate("/checkout");
     } catch (error) {
       console.log(error, "ini error");
     }
   };
 
-  // console.log(user, "ini user");
-
   useEffect(() => {
     countTotal();
-    getSavedProduct();
 
     return () => {};
   }, [cart]);
 
-  useEffect(() => {
-    getCart();
-    return () => {};
-  }, [user]);
-
-  // const width = window.outerWidth;
   return (
     <Stack mt={75} w={width} justifyContent={"center"}>
       <Box p={3}>
@@ -335,14 +426,14 @@ const CartPage = () => {
           >
             <Heading size={"sm"} p={5}>
               SHOPPING BAG {"("}
-              {cart?.data?.length}
+              {cart?.cart?.length}
               {")"}
             </Heading>
             <Divider mb={2} />
 
             {!isMobile ? (
               <Box>
-                {cart?.data?.length > 0 ? (
+                {cart?.cart?.length > 0 ? (
                   <Stack>
                     <HStack w={"100%"} justifyContent={"space-between"}>
                       <Text w={"50%"} align={"center"}>
@@ -355,7 +446,7 @@ const CartPage = () => {
                         Price
                       </Text>
                     </HStack>
-                    {cart?.data?.map((x, i) => (
+                    {cart?.cart?.map((x, i) => (
                       <Box key={i}>
                         <Flex>
                           <Flex w={"50%"} gap={2}>
@@ -395,7 +486,7 @@ const CartPage = () => {
                             >
                               -
                             </Button>
-                            <Text px={2}>{x.quantity}</Text>
+                            <Text px={2}>{x?.quantity}</Text>
                             <Button
                               size={"sm"}
                               borderRadius={0}
@@ -429,9 +520,9 @@ const CartPage = () => {
               </Box>
             ) : (
               <Stack>
-                {cart?.data?.length > 0 ? (
+                {cart?.cart?.length > 0 ? (
                   <Box>
-                    {cart?.data?.map((x, i) => (
+                    {cart?.cart?.map((x, i) => (
                       <Box key={i}>
                         <Flex>
                           <Flex gap={2}>
@@ -447,7 +538,7 @@ const CartPage = () => {
                                 >
                                   -
                                 </Button>
-                                <Text px={2}>{x.quantity}</Text>
+                                <Text px={2}>{x?.quantity}</Text>
                                 <Button
                                   size={"sm"}
                                   borderRadius={0}
@@ -507,11 +598,11 @@ const CartPage = () => {
           </Box>
           <Box bg={"white"} boxShadow={"md"}>
             <Heading size={"sm"} p={5}>
-              SAVED FOR LATER {saved?.data?.length}
+              SAVED FOR LATER {wishlist.wishlist?.length}
             </Heading>
             <Divider mb={5} />
-            {saved?.data?.length > 0 ? (
-              saved?.data?.map((x, i) => (
+            {wishlist?.wishlist?.wishlist?.length > 0 ? (
+              wishlist?.wishlist?.wishlist?.map((x, i) => (
                 <Box key={i}>
                   <Flex gap={2}>
                     <Box>

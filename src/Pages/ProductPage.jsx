@@ -12,16 +12,58 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import { collection, getDocs, query } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
 import { MdOutlineFavorite } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { db } from "../Config/firebase";
 import { shopStoriesMore } from "../DataArray/shopStoriesMore";
 import useProduct from "../Hooks/CustomHooks/useProduct";
 
 const ProductPage = () => {
   const width = window.innerWidth;
 
-  const products = useProduct();
+  const [products, setProducts] = useState([]);
+  const [selectedValue, setSelectedValue] = useState("");
+  const [sortValue, setSortValue] = useState("");
+  const [selectedSortBy, setSelectedSortBy] = useState("");
+
+  useEffect(() => {
+    const getProductsData = async () => {
+      try {
+        const q = query(collection(db, "products"));
+        const querySnapshot = await getDocs(q);
+        const arrProduct = [];
+
+        querySnapshot.forEach((doc) => {
+          let forData = doc.data();
+          forData.id = doc.id;
+          arrProduct.push(forData);
+        });
+
+        console.log(arrProduct);
+        setProducts(arrProduct);
+      } catch (error) {
+        console.log(error, "ini error");
+      }
+    };
+
+    return getProductsData;
+  }, []);
+
+  const handleSelectedChange = (e) => {
+    setSelectedValue(e.target.value);
+  };
+
+  const handleSortByChange = (e) => {
+    setSelectedSortBy(e.target.value);
+  };
+
+  const sortedData = selectedSortBy
+    ? products.sort((a, b) => (a[selectedSortBy] > b[selectedSortBy] ? 1 : -1))
+    : products;
+
+  console.log(sortedData);
 
   return (
     <Box mt={75} w={width} justifyContent={"center"}>
@@ -46,12 +88,14 @@ const ProductPage = () => {
               <Select placeholder="Show Filter" borderRadius={0}></Select>
             </Stack>
             <Stack>
-              <Select placeholder="Featured" borderRadius={0}>
-                <option value={"Featured"}>Featured</option>
-                <option value={"priceAsc"}>Price: Low - High</option>
-                <option value={"priceDesc"}>Price: High - Low</option>
-                <option value={"topRated"}>Top Rated</option>
-                <option value={"newArrival"}>New Arrival</option>
+              <Select
+                value={selectedSortBy}
+                placeholder="Featured"
+                borderRadius={0}
+                onChange={handleSortByChange}
+              >
+                <option value={"title"}>Alphabet Name</option>
+                <option value={"price"}>Price</option>
               </Select>
             </Stack>
           </HStack>
@@ -69,7 +113,7 @@ const ProductPage = () => {
         </Flex>
 
         <SimpleGrid columns={[2, null, 3]} spacing={[2, null, 10]}>
-          {products?.map((product, i) => (
+          {sortedData?.map((product, i) => (
             <Link key={i} to={`/product/${product?.id}`}>
               <Box
                 pos={"relative"}
