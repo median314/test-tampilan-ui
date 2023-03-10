@@ -22,8 +22,6 @@ import {
   Flex,
   Drawer,
   DrawerContent,
-  BoxProps,
-  FlexProps,
   DrawerOverlay,
   DrawerCloseButton,
   DrawerBody,
@@ -50,11 +48,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { FaSearch, FaUser } from "react-icons/fa";
-import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  updateProfile,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "../Config/firebase";
 import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import AuthContext from "../Hooks/authContext";
@@ -288,6 +282,10 @@ const AppNavbar = () => {
       console.log(error, "ini error");
     }
   };
+
+  // useEffect(() => {
+  //   return cart.cart;
+  // }, []);
 
   return (
     <Box

@@ -1,5 +1,4 @@
 import {
-  AspectRatio,
   Box,
   Divider,
   Flex,
@@ -28,27 +27,27 @@ const ProductPage = () => {
   const [sortValue, setSortValue] = useState("");
   const [selectedSortBy, setSelectedSortBy] = useState("");
 
+  const getProductsData = async () => {
+    try {
+      const q = query(collection(db, "products"));
+      const querySnapshot = await getDocs(q);
+      const arrProduct = [];
+
+      querySnapshot.forEach((doc) => {
+        let forData = doc.data();
+        forData.id = doc.id;
+        arrProduct.push(forData);
+      });
+
+      console.log(arrProduct);
+      setProducts(arrProduct);
+    } catch (error) {
+      console.log(error, "ini error");
+    }
+  };
+
   useEffect(() => {
-    const getProductsData = async () => {
-      try {
-        const q = query(collection(db, "products"));
-        const querySnapshot = await getDocs(q);
-        const arrProduct = [];
-
-        querySnapshot.forEach((doc) => {
-          let forData = doc.data();
-          forData.id = doc.id;
-          arrProduct.push(forData);
-        });
-
-        console.log(arrProduct);
-        setProducts(arrProduct);
-      } catch (error) {
-        console.log(error, "ini error");
-      }
-    };
-
-    return getProductsData;
+    getProductsData();
   }, []);
 
   const handleSelectedChange = (e) => {

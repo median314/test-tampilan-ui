@@ -19,7 +19,7 @@ import AppFooter from "../Components/AppFooter";
 import { moreYouNeed } from "../DataArray/moreYouNeed";
 import { youAlsoLove } from "../DataArray/youAlsoLove";
 import { Link, useNavigate } from "react-router-dom";
-import useAuthentication from "../Hooks/CustomHooks/useAuthentication";
+// import useAuthentication from "../Hooks/CustomHooks/useAuthentication";
 
 const HomePage = () => {
   const width = window.innerWidth;

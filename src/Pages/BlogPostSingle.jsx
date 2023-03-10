@@ -76,9 +76,9 @@ const BlogPostSingle = () => {
           w={["3xs", null, "sm"]}
           pos={"absolute"}
           bottom={["10%", null, "20%"]}
-          right={[0, null, "15%"]}
-          left={["50%", null, null]}
-          display={["none", null, null]}
+          right={[0, null, 0]}
+          left={["50%", null, "60%"]}
+          display={["none", null, "initial"]}
           src="https://chriselle.wpenginepowered.com/wp-content/uploads/2022/06/ChriselleLim_DrV0605-784x1045.jpg"
         />
       </HStack>

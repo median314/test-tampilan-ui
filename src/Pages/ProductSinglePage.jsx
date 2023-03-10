@@ -30,7 +30,6 @@ import { arrayUnion, doc, getDoc, setDoc } from "firebase/firestore";
 import AuthContext from "../Hooks/authContext";
 import { db } from "../Config/firebase";
 import { similiarItems } from "../DataArray/similiarItems";
-import { useAuthentication } from "../Hooks/CustomHooks/useAuthentication";
 import {
   useAuthState,
   useCartDispatch,
@@ -47,8 +46,6 @@ const ProductSinglePage = () => {
   const dispatchWishlist = useWishlistDispatch();
 
   const params = useParams();
-
-  const currentUser = useAuthentication();
 
   const toast = useToast();
 
@@ -76,43 +73,19 @@ const ProductSinglePage = () => {
 
       const getCart = localStorage.getItem("cart");
 
-      if (getCart === null || cart.cart?.length === 0) {
-        let payloadCart = {
-          cart: [{ ...e, quantity: 1 }],
-        };
-
-        addToCart(dispatch, payloadCart);
-      }
-      if (getCart !== null || cart.cart?.length > 0) {
-        console.log(getCart);
-        const cartArr = JSON.parse(getCart);
-        const newArr = cartArr.cart;
-
-        const find = newArr.findIndex((x) => x.title === e.title);
-        console.log(find, "ini result find");
-
-        if (find >= 0) {
-          toast({
-            position: "top",
-            title: "Wearing Klamby",
-            description: "This product is already added to your cart",
-            status: "info",
-            duration: 10000,
-          });
-        } else {
-          newArr.push({ ...e, quantity: 1 });
-
+      if (user) {
+        if (getCart === null || cart.cart?.length === 0) {
           let payloadCart = {
-            cart: [...newArr],
+            cart: [{ ...e, quantity: 1 }],
           };
 
           addToCart(dispatch, payloadCart);
 
-          const ref = doc(db, "cart", currentUser.uid);
+          const ref = doc(db, "cart", user.uid);
           await setDoc(
             ref,
             {
-              uid: currentUser.uid,
+              uid: user.uid,
               data: arrayUnion({ ...cartData, quantity: 1 }),
               createdAt: new Date(),
             },
@@ -128,7 +101,63 @@ const ProductSinglePage = () => {
             status: "success",
             duration: 10000,
           });
+        } else {
+          // if (getCart !== null || cart.cart?.length > 0) {
+          const getCart = localStorage.getItem("cart");
+          const cartArr = JSON.parse(getCart);
+          const newArr = cartArr.cart;
+          console.log(cartArr.cart);
+
+          const find = newArr.findIndex((x) => x.title === e.title);
+          console.log(find, "ini result find");
+
+          if (find >= 0) {
+            toast({
+              position: "top",
+              title: "Wearing Klamby",
+              description: "This product is already added to your cart",
+              status: "info",
+              duration: 10000,
+            });
+          } else {
+            newArr.push({ ...e, quantity: 1 });
+
+            let payloadCart = {
+              cart: [...newArr],
+            };
+
+            addToCart(dispatch, payloadCart);
+
+            const ref = doc(db, "cart", user.uid);
+            await setDoc(
+              ref,
+              {
+                uid: user.uid,
+                data: arrayUnion({ ...cartData, quantity: 1 }),
+                createdAt: new Date(),
+              },
+              { merge: true }
+            );
+
+            cartData = {};
+
+            toast({
+              position: "top",
+              title: "Wearing Klamby",
+              description: "Product added to your cart",
+              status: "success",
+              duration: 10000,
+            });
+          }
         }
+      } else {
+        toast({
+          position: "top",
+          title: "Wearing Klamby",
+          description: "Please login first",
+          status: "error",
+          duration: 10000,
+        });
       }
     } catch (error) {
       console.log(error, "ini error");
@@ -152,37 +181,11 @@ const ProductSinglePage = () => {
     const getWishlist = localStorage.getItem("wishlist");
     const wishlistArr = JSON.parse(getWishlist);
 
-    console.log(getWishlist);
-    console.log(wishlistArr);
-
     try {
-      if (wishlistArr === null || getWishlist === null) {
-        let payloadWishlist = {
-          wishlist: [{ ...data }],
-        };
-
-        addToWishlist(dispatchWishlist, payloadWishlist);
-      }
-      if (wishlistArr !== null || wishlistArr.length > 0) {
-        const newWishlistArr = wishlistArr.wishlist;
-        console.log(newWishlistArr, "ini wishlist");
-
-        const find = newWishlistArr.findIndex((x) => x.title === data.title);
-        console.log(find, "ini result find");
-
-        if (find >= 0) {
-          toast({
-            position: "top",
-            title: "Wearing Klamby",
-            description: "This product is already added to your wishlist",
-            status: "info",
-            duration: 10000,
-          });
-        } else {
-          newWishlistArr.push(savedData);
-
+      if (user) {
+        if (wishlistArr === null || getWishlist === null) {
           let payloadWishlist = {
-            wishlist: newWishlistArr,
+            wishlist: [{ ...data }],
           };
 
           addToWishlist(dispatchWishlist, payloadWishlist);
@@ -206,6 +209,58 @@ const ProductSinglePage = () => {
             status: "success",
           });
         }
+        if (getWishlist !== null || wishlistArr?.wishlist.length > 0) {
+          const newWishlistArr = wishlistArr.wishlist;
+          console.log(newWishlistArr, "ini wishlist");
+
+          const find = newWishlistArr.findIndex((x) => x.title === data.title);
+          console.log(find, "ini result find");
+
+          if (find >= 0) {
+            toast({
+              position: "top",
+              title: "Wearing Klamby",
+              description: "This product is already added to your wishlist",
+              status: "info",
+              duration: 10000,
+            });
+          } else {
+            newWishlistArr.push(savedData);
+
+            let payloadWishlist = {
+              wishlist: newWishlistArr,
+            };
+
+            addToWishlist(dispatchWishlist, payloadWishlist);
+
+            //to firebase
+            const ref = doc(db, "wishlist", user.uid);
+            await setDoc(
+              ref,
+              {
+                uid: user.uid,
+                data: arrayUnion(savedData),
+                createdAt: new Date(),
+              },
+              { merge: true }
+            );
+            savedData = {};
+            toast({
+              position: "top",
+              title: "Wearing Klamby",
+              description: "Berhasil mennyimpan product.",
+              status: "success",
+            });
+          }
+        }
+      } else {
+        toast({
+          position: "top",
+          title: "Wearing Klamby",
+          description: "Please login first",
+          status: "error",
+          duration: 10000,
+        });
       }
     } catch (error) {
       toast({
@@ -270,10 +325,23 @@ const ProductSinglePage = () => {
         </Text>
 
         <Box py={10}>
-          <Text px={[3, null, 0]} py={2} fontWeight={"bold"} fontSize={16}>
+          <Text
+            align={"center"}
+            px={[3, null, 0]}
+            py={5}
+            fontWeight={"bold"}
+            fontSize={20}
+          >
             Similiar items
           </Text>
-          <Flex gap={3} w={"100%"} overflowX={"auto"} px={[3, null, 0]} mx={2}>
+          <Flex
+            gap={3}
+            w={"100%"}
+            overflowX={"auto"}
+            px={[3, null, 0]}
+            mx={2}
+            justifyContent={"center"}
+          >
             {similiarItems.map((x, i) => (
               <>
                 <Image w={["40%", null, "12.5%"]} src={x.img} />
@@ -292,8 +360,12 @@ const ProductSinglePage = () => {
                 px={[0, null, 70]}
                 flexWrap={["wrap", null, "nowrap"]}
               >
-                <Stack w={["100%", null, "75%"]}>
-                  <Flex gap={2} flexWrap={["wrap-reverse", null, "nowrap"]}>
+                <Stack w={["100%", null, "70%"]}>
+                  <Flex
+                    gap={2}
+                    flexWrap={["wrap-reverse", null, "nowrap"]}
+                    justifyContent={"center"}
+                  >
                     <Flex
                       flexDir={["row", null, "column"]}
                       overflowX={["scroll", null, "auto"]}
@@ -314,7 +386,7 @@ const ProductSinglePage = () => {
                   </Flex>
                 </Stack>
 
-                <Stack w={["100%", null, "25%"]} p={[3, null, 0]}>
+                <Stack w={["100%", null, "30%"]} p={[3, null, 0]}>
                   <Text fontWeight={"semibold"}>{product.title}</Text>
                   <Text fontSize={"sm"}>Item AD753</Text>
                   <HStack mt={3}>
@@ -512,7 +584,7 @@ const ProductSinglePage = () => {
 
                     <Divider my={10} />
 
-                    <Stack py={5}>
+                    <Stack pt={5}>
                       <Heading size={"sm"}>Product Details</Heading>
                       <Text fontSize={14}>
                         Meet the Emilie sweater lady jacket, an elevated new
@@ -528,7 +600,7 @@ const ProductSinglePage = () => {
                         and therefore may not contain Better Cotton.
                       </Text>
                       <Box>
-                        <UnorderedList fontSize={14}>
+                        <UnorderedList fontSize={14} pb={5}>
                           <ListItem>100% Cotton</ListItem>
                           <ListItem>Machine Wash</ListItem>
                           <ListItem>Import</ListItem>
@@ -536,9 +608,9 @@ const ProductSinglePage = () => {
                         </UnorderedList>
                       </Box>
 
-                      <Divider my={10} />
+                      <Divider />
 
-                      <HStack py={10} justifyContent={"center"} spacing={5}>
+                      <HStack py={5} justifyContent={"center"} spacing={5}>
                         <Heading size="md">Share</Heading>
                         <FaFacebook size={20} />
                         <FaTwitter size={20} />
@@ -554,9 +626,9 @@ const ProductSinglePage = () => {
           )}
         </Box>
 
-        <Divider mt={8} />
+        <Divider />
 
-        <Box my={10} mx={[3, null, 0]}>
+        <Box my={4} mx={[3, null, 0]}>
           <Heading size="md" align={"center"} py={5}>
             Costumers Also Love
           </Heading>
@@ -566,7 +638,7 @@ const ProductSinglePage = () => {
             flexWrap={"nowrap"}
             // overflowWrap={"normal"}
           >
-            <HStack overflowX={"auto"}>
+            <HStack overflowX={"auto"} pb={5}>
               {customersLove.map((x) => (
                 <>
                   <Image w={"40%"} src={x.img} />
@@ -591,8 +663,6 @@ const ProductSinglePage = () => {
             </HStack>
           </Flex>
         </Box>
-
-        <Divider my={8} />
       </Box>
     </Box>
   );

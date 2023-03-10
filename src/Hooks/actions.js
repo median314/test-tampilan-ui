@@ -53,8 +53,14 @@ export const LoginUser = async(dispatch, payload) => {
         const docRef = doc(db, "cart", data.user.uid);
         const docSnap = await getDoc(docRef);
 
+        
         if (docSnap.exists()) {
-        localStorage.setItem("cart", JSON.stringify(docSnap.data().data));
+
+            const arrCart = {
+                cart: docSnap.data().data
+            }
+
+        localStorage.setItem("cart", JSON.stringify(arrCart));
 
         } else {
         // doc.data() will be undefined in this case
@@ -63,9 +69,13 @@ export const LoginUser = async(dispatch, payload) => {
 
         const getWishlist = doc(db, "wishlist", data.user.uid);
         const wishlist = await getDoc(getWishlist);
-
-        if (docSnap.exists()) {
-        localStorage.setItem("wishlist", JSON.stringify(docSnap.data().data));
+        
+        
+        if (wishlist.exists()) {
+            const arrWishlist = {
+                wishlist: wishlist.data().data
+            }
+        localStorage.setItem("wishlist", JSON.stringify(arrWishlist));
 
         } else {
         // doc.data() will be undefined in this case

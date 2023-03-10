@@ -198,8 +198,29 @@ const CartPage = () => {
 
         console.log(payloadWishlist);
         addToWishlist(dispatchWishlist, payloadWishlist);
-      }
-      if (wishlistArr !== null || wishlistArr.length > 0) {
+
+        //to firebase
+        const ref = doc(db, "wishlist", user.uid);
+        await setDoc(
+          ref,
+          {
+            uid: user.uid,
+            data: arrayUnion(savedData),
+            createdAt: new Date(),
+          },
+          { merge: true }
+        );
+        savedData = {};
+        toast({
+          position: "top",
+          title: "Wearing Klamby",
+          description: "Berhasil mennyimpan product.",
+          status: "success",
+        });
+
+        handleRemove(data);
+      } else {
+        // if (wishlistArr !== null || wishlistArr.length > 0) {
         const newWishlistArr = wishlistArr.wishlist;
         console.log(newWishlistArr, "ini wishlist");
 
@@ -212,28 +233,28 @@ const CartPage = () => {
         };
 
         addToWishlist(dispatchWishlist, payloadWishlist);
+
+        //to firebase
+        const ref = doc(db, "wishlist", user.uid);
+        await setDoc(
+          ref,
+          {
+            uid: user.uid,
+            data: arrayUnion(savedData),
+            createdAt: new Date(),
+          },
+          { merge: true }
+        );
+        savedData = {};
+        toast({
+          position: "top",
+          title: "Wearing Klamby",
+          description: "Berhasil mennyimpan product.",
+          status: "success",
+        });
+
+        handleRemove(data);
       }
-
-      handleRemove(data);
-
-      //to firebase
-      const ref = doc(db, "wishlist", user.uid);
-      await setDoc(
-        ref,
-        {
-          uid: user.uid,
-          data: arrayUnion(savedData),
-          createdAt: new Date(),
-        },
-        { merge: true }
-      );
-      savedData = {};
-      toast({
-        position: "top",
-        title: "Wearing Klamby",
-        description: "Berhasil mennyimpan product.",
-        status: "success",
-      });
     } catch (error) {
       toast({
         position: "top",
@@ -265,26 +286,26 @@ const CartPage = () => {
         };
 
         addToWishlist(dispatchWishlist, payloadWishlist);
-      }
 
-      //to firebase
-      const ref = doc(db, "wishlist", user.uid);
-      await setDoc(
-        ref,
-        {
-          uid: user.uid,
-          data: arrayRemove(savedData),
-          createdAt: new Date(),
-        },
-        { merge: true }
-      );
-      savedData = {};
-      toast({
-        position: "top",
-        title: "Wearing Klamby",
-        description: "Berhasil menghapus product dari wishlist.",
-        status: "success",
-      });
+        //to firebase
+        const ref = doc(db, "wishlist", user.uid);
+        await setDoc(
+          ref,
+          {
+            uid: user.uid,
+            data: arrayRemove(savedData),
+            createdAt: new Date(),
+          },
+          { merge: true }
+        );
+        savedData = {};
+        toast({
+          position: "top",
+          title: "Wearing Klamby",
+          description: "Berhasil menghapus product dari wishlist.",
+          status: "success",
+        });
+      }
     } catch (error) {
       toast({
         position: "top",
