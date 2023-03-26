@@ -8,6 +8,9 @@ let cart = localStorage.getItem("cart")
 let wishlist = localStorage.getItem("wishlist")
   ? JSON.parse(localStorage.getItem("wishlist"))
   : "";
+let invoice = localStorage.getItem("invoice")
+  ? JSON.parse(localStorage.getItem("user"))
+  : "";
 
 export const initialState = {
   loading: false,
@@ -15,7 +18,8 @@ export const initialState = {
 
   user: "" || user,
   cart: "" || cart,
-  wishlist: "" || wishlist
+  wishlist: "" || wishlist,
+  invoice: "" || invoice
 };
 
 export const AuthReducer = (initialState, action) => {
@@ -94,6 +98,11 @@ export const AuthReducer = (initialState, action) => {
       return{
         ...initialState,
         wishlist: action
+      }
+    case "ADD_INVOICE":
+      return{
+        ...initialState,
+        invoice: action
       }
     default:
       throw new Error(`Unhandled action type: ${action.type}`);

@@ -1,7 +1,10 @@
 import { Box, Flex, Heading, Image, Stack, Text } from "@chakra-ui/react";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const BlogPost = () => {
+  const navigate = useNavigate();
+
   return (
     <Stack mt={65} pb={5}>
       <Stack pos={"relative"}>
@@ -35,6 +38,7 @@ const BlogPost = () => {
             p={3}
             cursor={"pointer"}
             _hover={{ bg: "white", transition: "0.5s", color: "black" }}
+            onClick={() => navigate("/post/id")}
           >
             GO TO ARTICLES
           </Box>

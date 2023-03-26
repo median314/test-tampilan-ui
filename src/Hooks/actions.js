@@ -91,53 +91,6 @@ export const LoginUser = async(dispatch, payload) => {
     }
 }
 
-// export const signUp = async (dispatch, signUpPayload) => {
-//     const userData = {
-//         name: signUpPayload.name,
-//         email: signUpPayload.email,
-//         password: signUpPayload.password
-//     }
-
-//     try {
-//         dispatch({type: "REQUEST_SIGNUP"})
-
-//        let response = await createUserWithEmailAndPassword(
-//         auth,
-//         userData.name,
-//         userData.email, 
-//         userData.password, 
-//         )
-        
-//         let data = response
-
-//         .then(async (userCredential) => {
-//             await updateProfile(auth.currentUser, {
-//               displayName: userData.name,
-//             });
-
-//             const user = userCredential.user;
-//             await setDoc(doc(db, "users", user.uid), {
-//               name: user.name,
-//               email: user.email,
-//               uid_user: user.uid,
-//               createdAt: new Date(),
-//             });
-
-
-//         })
-
-//         if(data.response){
-//             dispatch({type: "SIGNUP_SUCCESS"})
-
-//         }
-        
-//         window.location.href = '/'
-
-//     } catch (error) {
-//       console.log(error, 'ini error');  
-//     }
-// }
-
 export async function logout(dispatch) {
     var store = require("store");
   
@@ -157,17 +110,6 @@ export const addToCart = async (dispatch, payloadCart) => {
     console.log(payloadCart, 'ini cart');
 
     return payloadCart
-}
-
-export const addButton = (dispatch, payload) => {
-    dispatch({
-        type: "ADD_BUTTON",
-        cart: payload
-    })
-
-    localStorage.setItem("cart")
-
-    return payload
 }
 
 export const addToWishlist = (dispatch, payloadWishlist) => {

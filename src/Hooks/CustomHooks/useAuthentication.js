@@ -17,7 +17,7 @@ export const useAuthentication = () => {
             } else {
               // User is signed out
               // ...
-              console.log("signed out");
+              // console.log("signed out");
             }
         });
 

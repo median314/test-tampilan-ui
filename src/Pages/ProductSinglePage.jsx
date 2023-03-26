@@ -16,7 +16,7 @@ import {
   UnorderedList,
   useToast,
 } from "@chakra-ui/react";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaEye,
   FaFacebook,
@@ -27,7 +27,6 @@ import {
 } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { arrayUnion, doc, getDoc, setDoc } from "firebase/firestore";
-import AuthContext from "../Hooks/authContext";
 import { db } from "../Config/firebase";
 import { similiarItems } from "../DataArray/similiarItems";
 import {
@@ -102,7 +101,6 @@ const ProductSinglePage = () => {
             duration: 10000,
           });
         } else {
-          // if (getCart !== null || cart.cart?.length > 0) {
           const getCart = localStorage.getItem("cart");
           const cartArr = JSON.parse(getCart);
           const newArr = cartArr.cart;

@@ -11,24 +11,78 @@ import {
   Select,
   Stack,
   Text,
+  useToast,
 } from "@chakra-ui/react";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { db } from "../Config/firebase";
 import AuthContext from "../Hooks/authContext";
-import { useAuthState } from "../Hooks/context";
+import { useAuthState, useCartState } from "../Hooks/context";
 import { useAuthentication } from "../Hooks/CustomHooks/useAuthentication";
 
 const CheckoutPage = () => {
-  const [order, setOrder] = useState();
+  const [country, setCountry] = useState();
+  const [dataObject, setDataObject] = useState([]);
   const { user } = useAuthState();
+  const { cart } = useCartState();
   // const { currentUser } = useContext(AuthContext);
 
+  const toast = useToast();
   const navigate = useNavigate();
 
   const getCheckoutData = localStorage.getItem("checkout");
   const checkoutData = JSON.parse(getCheckoutData);
+
+  const handleData = (key, value) => {
+    let newObject = dataObject;
+    newObject[key] = value;
+  };
+
+  const handlePayment = async () => {
+    let addData = {};
+
+    addData.name = dataObject.name;
+    addData.country = country;
+    addData.address = dataObject.address;
+    addData.city = dataObject.city;
+    addData.postalCode = dataObject.postcode;
+    addData.province = dataObject.province;
+    addData.phone = dataObject.phone;
+    addData.email = dataObject.email;
+
+    console.log(addData);
+
+    try {
+      await setDoc(doc(db, "checkout", user.uid), {
+        addData,
+        product: checkoutData,
+        uid_user: user.uid,
+        createdAt: new Date(),
+      });
+
+      toast({
+        title: "Klamby.id",
+        description: "Redirecting to Payment Page",
+        status: "success",
+        duration: 2500,
+      });
+    } catch (error) {
+      console.log(error, "ini error");
+      toast({
+        title: "Klamby.id",
+        description: `Error: ${error}`,
+        status: "error",
+        duration: 2500,
+      });
+    }
+  };
+
+  const changeStatus = (e) => {
+    setCountry(e.target.value);
+  };
+
+  console.log(country, "ini country");
 
   if (getCheckoutData === null) {
     window.location.href = "/";
@@ -53,23 +107,57 @@ const CheckoutPage = () => {
         gap={2}
       >
         <Text fontWeight={"semibold"}>Delivery Address</Text>
-        <Input placeholder="Full Name" />
-        <Select placeholder="Country">
-          <option>Indonesia</option>
-          <option>Malaysia</option>
-          <option>Singapore</option>
+        <Input
+          placeholder="Full Name"
+          id="name"
+          onChange={(e) => handleData(e.target.id, e.target.value)}
+        />
+        <Select placeholder="Country" value={country} onChange={changeStatus}>
+          <option id="Indonesia" value="Indonesia">
+            Indonesia
+          </option>
+          <option id="Malaysia" value="Malaysia">
+            Malaysia
+          </option>
+          <option id="Singapore" value="Singapore">
+            Singapore
+          </option>
         </Select>
-        <Input placeholder="Address Line 1" />
-        <Input placeholder="Address Line 2" />
+        <Input
+          placeholder="Address"
+          id="address"
+          onChange={(e) => handleData(e.target.id, e.target.value)}
+        />
         <HStack>
-          <Input placeholder="City" />
-          <Input placeholder="Postal Code" />
+          <Input
+            placeholder="City"
+            id="city"
+            onChange={(e) => handleData(e.target.id, e.target.value)}
+          />
+          <Input
+            placeholder="PostalCode"
+            id="postcode"
+            type={"number"}
+            onChange={(e) => handleData(e.target.id, e.target.value)}
+          />
         </HStack>
-        <Input placeholder="State/Province/Region" />
+        <Input
+          placeholder="State/Province/Region"
+          id="province"
+          onChange={(e) => handleData(e.target.id, e.target.value)}
+        />
         <Text>Phone Number</Text>
-        <Input placeholder="Phone" />
+        <Input
+          placeholder="Phone"
+          id="phone"
+          onChange={(e) => handleData(e.target.id, e.target.value)}
+        />
         <Text>Email Address</Text>
-        <Input placeholder="Phone" />
+        <Input
+          placeholder="Email"
+          id="email"
+          onChange={(e) => handleData(e.target.id, e.target.value)}
+        />
         <Flex gap={4}>
           <Checkbox checked={true} size={"lg"} />
           <Text fontSize={12}>
@@ -77,7 +165,11 @@ const CheckoutPage = () => {
             accordance with the Privacy Statement and Cookie Policy.
           </Text>
         </Flex>
-        <Button colorScheme={"facebook"} borderRadius={0}>
+        <Button
+          colorScheme={"facebook"}
+          borderRadius={0}
+          onClick={handlePayment}
+        >
           CONTINUE TO PAYMENT
         </Button>
       </Stack>
